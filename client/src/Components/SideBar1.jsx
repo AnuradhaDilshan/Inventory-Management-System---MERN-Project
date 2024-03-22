@@ -43,19 +43,19 @@ function SideBar1() {
               {/* Add icons to the links using the .nav-icon class
                 with font-awesome or any other icon font library */}
               <li className="nav-item">
-                <a href="/product" className="nav-link">
+                <a href="/productp" className="nav-link">
                   <i className="nav-icon fas fa-cubes" />
                   <p>Product</p>
                 </a>
               </li>
               <li className="nav-item">
-                <a href="/invmgtmaterial" className="nav-link">
+                <a href="/invmgtmaterialp" className="nav-link">
                   <i className="nav-icon fas fa-box" />
                   <p>Packing Material</p>
                 </a>
               </li>
               <li className="nav-item">
-                <a href="/invmgtsupplier" className="nav-link">
+                <a href="/invmgtsupplierp" className="nav-link">
                   <i className="nav-icon fas fa-users" />
                   <p>Supplier</p>
                 </a>

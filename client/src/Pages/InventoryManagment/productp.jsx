@@ -1,16 +1,16 @@
 import React from "react";
 import Header from "../../Components/Header";
-import SideBar from "../../Components/SideBar";
+import SideBar1 from "../../Components/SideBar1";
 import ProductContent from "../../Components/InventoryManagement/ProductContent";
 
-function Product() {
+function Productp() {
   return (
     <div>
       <Header />
-      <SideBar />
+      <SideBar1 />
       <ProductContent />
     </div>
   );
 }
 
-export default Product;
+export default Productp;

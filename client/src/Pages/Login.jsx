@@ -2,19 +2,31 @@ import React, { useState } from "react";
 import "../Css/login.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import toastr from "toastr/toastr";
-import "toastr/build/toastr.css";
+import { toast, Toaster } from "react-hot-toast";
 
 function Login() {
-  const [username, setUsername] = useState();
-  const [password, setPassword] = useState();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
+
+  const updateStatesAndNavigate = (path) => {
+    setUsername("");
+    setPassword("");
+
+    // Delay the navigation and toast to ensure state update
+    setTimeout(() => {
+      navigate(path);
+      toast.success("Inventory has Good-Health", {
+        position: "top-right",
+      });
+    }, 0); // minimal timeout to ensure the execution after state updates
+  };
 
   const handleSubmit = async () => {
     if (!username) {
-      toastr.error("Username is required");
+      toast.error("Username is required");
     } else if (!password) {
-      toastr.error("Password is required");
+      toast.error("Password is required");
     } else {
       axios
         .post("http://localhost:3001/login", {
@@ -22,23 +34,33 @@ function Login() {
           password,
         })
         .then((result) => {
-          console.log(result);
-          if (result.data.role == 1) {
-            setUsername("");
-            setPassword("");
-            navigate("/dashboardinv");
-          }
-          if (result.data.role == 2) {
-            setUsername("");
-            setPassword("");
-            navigate("/dashboard1inv");
+          const rolePaths = {
+            1: "/dashboardinv",
+            2: "/dashboard1inv",
+            3: "/dashboard2inv",
+          };
+          const path = rolePaths[result.data.role];
+          if (path) {
+            updateStatesAndNavigate(path);
+          } else {
+            // If role is not 1, 2, or 3
+            toast.error("Unexpected role value received.", {
+              position: "top-right",
+            });
           }
         })
-        .catch((err) => console.log(err));
+        .catch((err) => {
+          console.error("Login error:", err);
+          toast.error("Login failed. Please try again.", {
+            position: "top-right",
+          });
+        });
     }
   };
+
   return (
     <div className="hold-transition login-page">
+      <Toaster position="top-right" reverseOrder={false} />
       <div className="login-box">
         <div className="login-logo">
           <a href="#">
@@ -54,6 +76,7 @@ function Login() {
                 type="text"
                 className="form-control"
                 placeholder="Username"
+                value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
               <div className="input-group-append">
@@ -67,6 +90,7 @@ function Login() {
                 type="password"
                 className="form-control"
                 placeholder="Password"
+                value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
               <div className="input-group-append">
@@ -77,19 +101,17 @@ function Login() {
             </div>
             <div className="row">
               <div className="col-8"></div>
-              {/* /.col */}
               <div className="col-4">
                 <button
+                  type="button"
                   className="btn btn-primary btn-block"
                   onClick={handleSubmit}
                 >
                   Sign In
                 </button>
               </div>
-              {/* /.col */}
             </div>
           </div>
-          {/* /.login-card-body */}
         </div>
       </div>
     </div>

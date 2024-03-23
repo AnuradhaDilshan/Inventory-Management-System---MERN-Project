@@ -14,5 +14,13 @@
     "username": "productmanager",
     "password": "prodmng123",
     "role": 2
+  },
+  {
+    "_id": {
+      "$oid": "65fdcb61468976d2f1803c9e"
+    },
+    "username": "financemanager",
+    "password": "finanmng123",
+    "role": 3
   }
 ]

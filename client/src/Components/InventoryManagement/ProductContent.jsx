@@ -5,22 +5,22 @@ import toastr from "toastr/toastr";
 import "toastr/build/toastr.css";
 
 function ProductContent() {
-  const [materialcode, setMaterialcode] = useState("");
-  const [materialname, setMaterialname] = useState("");
+  const [productcode, setProductcode] = useState("");
+  const [productname, setProductname] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [suppliercode, setSuppliercode] = useState("");
   const [price, setPrice] = useState(0);
   const [date, setDate] = useState("");
   const [supplierlist, setSupplierlist] = useState([]);
-  const [materiallist, setMateriallist] = useState([]);
+  const [productlist, setProductlist] = useState([]);
   const [updateMode, setUpdateMode] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   const handleSubmit = async () => {
     if (
-      !materialcode ||
-      !materialname ||
+      !productcode ||
+      !productname ||
       !quantity ||
       !suppliercode ||
       !price ||
@@ -29,26 +29,26 @@ function ProductContent() {
       toastr.error("All fields are required");
     } else {
       const apiUrl = updateMode
-        ? `http://localhost:3001/product/${selectedProduct._id}` // Update existing supplier
-        : "http://localhost:3001/product"; // Add new supplier
+        ? `http://localhost:3001/productp/${selectedProduct._id}` // Update existing supplier
+        : "http://localhost:3001/productp"; // Add new supplier
 
       const requestData = updateMode
         ? {
             ...selectedProduct,
-            materialcode,
-            materialname,
+            productcode,
+            productname,
             quantity,
             suppliercode,
             price,
             date,
           }
-        : { materialcode, materialname, quantity, suppliercode, price, date };
+        : { productcode, productname, quantity, suppliercode, price, date };
 
       axios[updateMode ? "put" : "post"](apiUrl, requestData)
         .then((result) => {
           toastr.success(result.data);
-          setMaterialcode("");
-          setMaterialname("");
+          setProductcode("");
+          setProductname("");
           setQuantity(0);
           setSuppliercode("");
           setPrice(0);
@@ -61,21 +61,21 @@ function ProductContent() {
     }
   };
 
-  const openModalForUpdate = (material) => {
-    setMaterialcode(material.materialcode);
-    setMaterialname(material.materialname);
-    setQuantity(material.quantity);
-    setSuppliercode(material.suppliercode);
-    setPrice(material.price);
-    const dateValue = new Date(material.date).toISOString().split("T")[0];
+  const openModalForUpdate = (product) => {
+    setProductcode(product.productcode);
+    setProductname(product.productname);
+    setQuantity(product.quantity);
+    setSuppliercode(product.suppliercode);
+    setPrice(product.price);
+    const dateValue = new Date(product.date).toISOString().split("T")[0];
     setDate(dateValue);
     setUpdateMode(true); // Set update mode
-    setSelectedProduct(material); // Set selected supplier for update
+    setSelectedProduct(product); // Set selected supplier for update
   };
 
   const handleDelete = async (id) => {
     try {
-      const data = await axios.delete("http://localhost:3001/material/" + id);
+      const data = await axios.delete("http://localhost:3001/productp/" + id);
       toastr.success(data.data);
       getData();
     } catch (e) {
@@ -84,8 +84,8 @@ function ProductContent() {
   };
 
   const clearData = () => {
-    setMaterialcode("");
-    setMaterialname("");
+    setProductcode("");
+    setProductname("");
     setQuantity(0);
     setSuppliercode("");
     setPrice(0);
@@ -94,12 +94,12 @@ function ProductContent() {
 
   const getData = async () => {
     try {
-      let apiUrl = "http://localhost:3001/material";
+      let apiUrl = "http://localhost:3001/productp";
       if (searchQuery.trim() !== "") {
-        apiUrl += `/search?materialname=${searchQuery}`;
+        apiUrl += `/search?productname=${searchQuery}`;
       }
       const data = await axios.get(apiUrl);
-      setMateriallist(data.data);
+      setProductlist(data.data);
     } catch (e) {
       console.log(e);
     }
@@ -173,7 +173,7 @@ function ProductContent() {
                         <input
                           className="form-control form-control-sm"
                           type="text"
-                          placeholder="search material by name"
+                          placeholder="search product by name"
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -210,11 +210,11 @@ function ProductContent() {
                           </tr>
                         </thead>
                         <tbody>
-                          {materiallist.map((item) => {
+                          {productlist.map((item) => {
                             return (
                               <tr key={item._id}>
-                                <td>{item.materialcode}</td>
-                                <td>{item.materialname}</td>
+                                <td>{item.productcode}</td>
+                                <td>{item.productname}</td>
                                 <td>{item.quantity}</td>
                                 <td>{item.suppliercode}</td>
                                 <td>{item.price}</td>
@@ -283,7 +283,7 @@ function ProductContent() {
       </div>
       {/* /.content-wrapper */}
 
-      {/* Add Material */}
+      {/* Add Product */}
       {/* /.modal */}
       <div className="modal fade" id="modal-add">
         <div className="modal-dialog">
@@ -301,33 +301,33 @@ function ProductContent() {
             </div>
             <div className="modal-body">
               <div className="form-group">
-                <label htmlFor="materialCode">Product code</label>
+                <label htmlFor="productCode">Product code</label>
                 <input
                   type="text"
                   className="form-control bg-secondary"
-                  id="materialCode"
+                  id="productCode"
                   placeholder="Enter code"
-                  value={materialcode}
-                  onChange={(e) => setMaterialcode(e.target.value)}
+                  value={productcode}
+                  onChange={(e) => setProductcode(e.target.value)}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="materialName">Product name</label>
+                <label htmlFor="productName">Product name</label>
                 <input
                   type="text"
                   className="form-control bg-secondary"
-                  id="materialName"
+                  id="productName"
                   placeholder="Enter name"
-                  value={materialname}
-                  onChange={(e) => setMaterialname(e.target.value)}
+                  value={productname}
+                  onChange={(e) => setProductname(e.target.value)}
                 />
               </div>
               <div className="form-group">
-                <label htmlFor="materialQuantity">Quantity</label>
+                <label htmlFor="productQuantity">Quantity</label>
                 <input
                   type="text"
                   className="form-control bg-secondary"
-                  id="materialQuantity"
+                  id="productQuantity"
                   placeholder="Enter qty"
                   value={quantity}
                   onChange={(e) => setQuantity(e.target.value)}
@@ -353,11 +353,11 @@ function ProductContent() {
                 </select>
               </div>
               <div className="form-group">
-                <label htmlFor="materialPrice">Price</label>
+                <label htmlFor="productPrice">Price</label>
                 <input
                   type="text"
                   className="form-control bg-secondary"
-                  id="materialPrice"
+                  id="productPrice"
                   placeholder="Enter price"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}

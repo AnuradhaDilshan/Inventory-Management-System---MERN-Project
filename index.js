@@ -4,6 +4,7 @@ const cors = require("cors");
 const UserModel = require("./server/models/User");
 const SuppliersModel = require("./server/models/Supplier");
 const MaterialModel = require("./server/models/Material");
+const ProductModel = require("./server/models/Product");
 
 const app = express();
 
@@ -168,6 +169,70 @@ app.delete("/material/:id", async (req, res) => {
     res.status(400).json({ error: err.message });
   }
 });
+
+// --------------------------------------------------------
+
+//productCreate
+app.post("/productp", async (req, res) => {
+  try {
+    const product = await ProductModel.create(req.body);
+    res.json("Product created");
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json("Internal Server Error");
+  }
+});
+
+//productRead
+app.get("/productp", async (req, res) => {
+  try {
+    const products = await ProductModel.find();
+    res.json(products);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json("Internal Server Error");
+  }
+});
+
+//productReadSearch
+app.get("/productp/search", async (req, res) => {
+  try {
+    const { productname } = req.query;
+
+    const products = await ProductModel.find({
+      productname: { $regex: productname, $options: "i" },
+    });
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+//productUpdate
+app.put("/productp/:id", async (req, res) => {
+  try {
+    const product = await ProductModel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.json("Product updated");
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+//productDelete
+app.delete("/productp/:id", async (req, res) => {
+  try {
+    await ProductModel.findByIdAndDelete(req.params.id);
+    res.json("Product deleted");
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+// --------------------------------------------------------
 
 app.listen(3001, () => {
   console.log("server is running ");

@@ -78,7 +78,7 @@ app.get("/supplier/search", async (req, res) => {
 //supplierReadforMaterial
 app.get("/supplier/active", async (req, res) => {
   try {
-    const suppliers = await SuppliersModel.find({ status: "active" });
+    const suppliers = await SuppliersModel.find({ status: "Active" });
     res.json(suppliers);
   } catch (error) {
     console.error("Error:", error);

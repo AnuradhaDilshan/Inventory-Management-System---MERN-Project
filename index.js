@@ -27,10 +27,10 @@ app.post("/login", (req, res) => {
             role: user.role,
           });
         } else {
-          res.json("Invalid password");
+          res.json("Invalid Password");
         }
       } else {
-        res.json("Invalid user");
+        res.json("Invalid User");
       }
     })
     .catch((error) => {
@@ -43,7 +43,7 @@ app.post("/login", (req, res) => {
 app.post("/supplier", async (req, res) => {
   try {
     const supplier = await SuppliersModel.create(req.body);
-    res.json("Supplier created");
+    res.json("Supplier Created");
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json("Internal Server Error");
@@ -94,7 +94,7 @@ app.put("/supplier/:id", async (req, res) => {
       req.body,
       { new: true }
     );
-    res.json("Supplier updated");
+    res.json("Supplier Updated");
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -104,7 +104,7 @@ app.put("/supplier/:id", async (req, res) => {
 app.delete("/supplier/:id", async (req, res) => {
   try {
     await SuppliersModel.findByIdAndDelete(req.params.id);
-    res.json("Supplier deleted");
+    res.json("Supplier Deleted");
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -114,7 +114,7 @@ app.delete("/supplier/:id", async (req, res) => {
 app.post("/material", async (req, res) => {
   try {
     const material = await MaterialModel.create(req.body);
-    res.json("Material created");
+    res.json("Material Created");
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json("Internal Server Error");
@@ -154,7 +154,7 @@ app.put("/material/:id", async (req, res) => {
       req.body,
       { new: true }
     );
-    res.json("Material updated");
+    res.json("Material Updated");
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -164,7 +164,7 @@ app.put("/material/:id", async (req, res) => {
 app.delete("/material/:id", async (req, res) => {
   try {
     await MaterialModel.findByIdAndDelete(req.params.id);
-    res.json("Material deleted");
+    res.json("Material Deleted");
   } catch (err) {
     res.status(400).json({ error: err.message });
   }

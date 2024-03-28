@@ -185,8 +185,8 @@ function SupplierContent() {
                             <th className="text-center">Supplier Name</th>
                             <th className="text-center">Registered Date</th>
                             <th className="text-center">Status</th>
-                            <th></th>
-                            <th></th>
+                            <th className="text-center">Edit</th>
+                            <th className="text-center">Delete</th>
                           </tr>
                         </thead>
                         <tbody>

@@ -214,8 +214,8 @@ function MaterialContent() {
                             <th className="text-center">Quantity </th>
                             <th className="text-right">Price</th>
                             <th className="text-right">Total Price</th>
-                            <th></th>
-                            <th></th>
+                            <th className="text-center">Edit</th>
+                            <th className="text-center">Delete</th>
                           </tr>
                         </thead>
                         <tbody>

@@ -20,15 +20,15 @@ function MainPage() {
     <div>
       <Routes>
         <Route path="/" exact element={<Login />} />
-        <Route path="/dashboardinv" exact element={<DashBoard />} />
+        <Route path="/inventory-dashboard" exact element={<DashBoard />} />
         <Route path="/dashboard1inv" exact element={<DashBoard1 />} />
         <Route path="/dashboard2inv" exact element={<DashBoard2 />} />
-        <Route path="/invmgtmaterial" exact element={<Material />} />
-        <Route path="/invmgtmaterialp" exact element={<Materialp />} />
+        <Route path="/inventory-material" exact element={<Material />} />
+        <Route path="/inventory-materialp" exact element={<Materialp />} />
         <Route path="/product" exact element={<Product />} />
         <Route path="/productp" exact element={<Productp />} />
-        <Route path="/invmgtsupplier" exact element={<Supplier />} />
-        <Route path="/invmgtsupplierp" exact element={<Supplierp />} />
+        <Route path="/inventory-supplier" exact element={<Supplier />} />
+        <Route path="/inventory-supplierp" exact element={<Supplierp />} />
         <Route path="/summary" exact element={<Summary />} />
         <Route path="/product-price" exact element={<ProductPrice />} />
         <Route path="/material-price" exact element={<MaterialPrice />} />

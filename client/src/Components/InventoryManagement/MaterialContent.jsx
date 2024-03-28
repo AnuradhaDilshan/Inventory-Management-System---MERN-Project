@@ -7,9 +7,9 @@ import "toastr/build/toastr.css";
 function MaterialContent() {
   const [materialcode, setMaterialcode] = useState("");
   const [materialname, setMaterialname] = useState("");
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState("");
   const [suppliercode, setSuppliercode] = useState("");
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState("");
   const [date, setDate] = useState("");
   const [supplierlist, setSupplierlist] = useState([]);
   const [materiallist, setMateriallist] = useState([]);
@@ -119,6 +119,10 @@ function MaterialContent() {
     getDataSupplier();
   }, [searchQuery]);
 
+  const formatDate = (dateString) => {
+    return new Date(dateString).toISOString().split("T")[0];
+  };
+
   return (
     <div>
       {/* Content Wrapper. Contains page content */}
@@ -169,16 +173,16 @@ function MaterialContent() {
                   </div>
                   <div className="card-body">
                     <div className="row mb-3">
-                      <div className="col-3">
+                      <div className="col-2">
                         <input
                           className="form-control form-control-sm"
                           type="text"
-                          placeholder="search material by name"
+                          placeholder="Search Material by Name"
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                         />
                       </div>
-                      <div className="col-3"></div>
+                      <div className="col-4"></div>
                       <div className="col-6">
                         <div className="float-right">
                           <button
@@ -199,27 +203,70 @@ function MaterialContent() {
                       <table className="table table-head-fixed text-nowrap">
                         <thead>
                           <tr>
-                            <th>Material Code</th>
-                            <th>Material Name</th>
-                            <th>Quantity </th>
-                            <th>Supplier Code</th>
-                            <th>Price</th>
-                            <th>Date</th>
+                            <th>No</th>
+                            <th className="text-center">Material Code</th>
+                            <th className="text-center">Supplier Code</th>
+                            <th className="text-center">Material Name</th>
+                            <th className="text-center">Added Date</th>
+                            <th className="text-center">Quantity </th>
+                            <th className="text-right">Price</th>
+                            <th className="text-right">Total Price</th>
                             <th></th>
                             <th></th>
                           </tr>
                         </thead>
                         <tbody>
-                          {materiallist.map((item) => {
+                          {materiallist.map((item, index) => {
+                            // Determine if the price and total price are whole numbers or not
+                            const isPriceWholeNumber = item.price % 1 === 0;
+                            const isTotalPriceWholeNumber =
+                              (item.quantity * item.price) % 1 === 0;
+
+                            // Format price with up to 3 decimal places and commas, omitting .000 for whole numbers
+                            const formattedPrice = isPriceWholeNumber
+                              ? item.price.toLocaleString("en-US")
+                              : parseFloat(
+                                  item.price.toFixed(3)
+                                ).toLocaleString("en-US", {
+                                  minimumFractionDigits: 1,
+                                  maximumFractionDigits: 3,
+                                });
+
+                            // Calculate total price and format with up to 3 decimal places and commas, omitting .000 for whole numbers
+                            const totalPrice = item.quantity * item.price;
+                            const formattedTotalPrice = isTotalPriceWholeNumber
+                              ? totalPrice.toLocaleString("en-US")
+                              : parseFloat(
+                                  totalPrice.toFixed(3)
+                                ).toLocaleString("en-US", {
+                                  minimumFractionDigits: 1,
+                                  maximumFractionDigits: 3,
+                                });
+
+                            // Use the formatDate utility function for displaying the date
+                            const displayDate = formatDate(item.date);
+
                             return (
                               <tr key={item._id}>
-                                <td>{item.materialcode}</td>
-                                <td>{item.materialname}</td>
-                                <td>{item.quantity}</td>
-                                <td>{item.suppliercode}</td>
-                                <td>{item.price}</td>
-                                <td>{item.date}</td>
-                                <td>
+                                <td>{index + 1}</td>
+                                <td className="text-center">
+                                  {item.materialcode}
+                                </td>
+                                <td className="text-center">
+                                  {item.suppliercode}
+                                </td>
+                                <td className="text-center">
+                                  {item.materialname}
+                                </td>
+                                <td className="text-center">{displayDate}</td>
+                                <td className="text-center">{item.quantity}</td>
+                                <td className="text-right">
+                                  LKR {formattedPrice}
+                                </td>
+                                <td className="text-right">
+                                  LKR {formattedTotalPrice}
+                                </td>
+                                <td className="text-center">
                                   <button
                                     type="button"
                                     className="btn btn-light mr-1"
@@ -243,7 +290,7 @@ function MaterialContent() {
                                     </svg>
                                   </button>
                                 </td>
-                                <td>
+                                <td className="text-center">
                                   <button
                                     type="button"
                                     className="btn btn-light mr-1"
@@ -289,115 +336,124 @@ function MaterialContent() {
         <div className="modal-dialog">
           <div className="modal-content dark-mode">
             <div className="modal-header">
-              <h4 className="modal-title">Material</h4>
+              <h4 className="modal-title">Add Material</h4>
               <button
                 type="button"
                 className="close"
                 data-dismiss="modal"
                 aria-label="Close"
               >
-                <span aria-hidden="true"></span>
+                <span aria-hidden="true">&times;</span>{" "}
+                {/* Add &times; for close symbol */}
               </button>
             </div>
             <div className="modal-body">
               <div className="form-group">
-                <label htmlFor="materialCode">Material code</label>
-                <input
-                  type="text"
-                  className="form-control bg-secondary"
-                  id="materialCode"
-                  placeholder="Enter code"
-                  value={materialcode}
-                  onChange={(e) => setMaterialcode(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="materialName">Material name</label>
+                <label htmlFor="materialName">Material Name</label>
                 <input
                   type="text"
                   className="form-control bg-secondary"
                   id="materialName"
-                  placeholder="Enter name"
+                  placeholder="Enter Material Name"
                   value={materialname}
                   onChange={(e) => setMaterialname(e.target.value)}
                 />
               </div>
-              <div className="form-group">
-                <label htmlFor="materialQuantity">Quantity</label>
-                <input
-                  type="text"
-                  className="form-control bg-secondary"
-                  id="materialQuantity"
-                  placeholder="Enter qty"
-                  value={quantity}
-                  onChange={(e) => setQuantity(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="supplierCode">Supplier code</label>
-                <select
-                  className="form-control bg-secondary"
-                  value={suppliercode}
-                  onChange={(e) => setSuppliercode(e.target.value)}
-                >
-                  <option value="" disabled selected>
-                    -select one-
-                  </option>
-                  {supplierlist.map((item) => {
-                    return (
-                      <option value={item.suppliercode}>
-                        {item.suppliercode}
+              <div className="row">
+                {" "}
+                {/* Wrap form groups in a row */}
+                <div className="col-md-6">
+                  {" "}
+                  {/* First column */}
+                  <div className="form-group">
+                    <label htmlFor="materialCode">Material Code</label>
+                    <input
+                      type="text"
+                      className="form-control bg-secondary"
+                      id="materialCode"
+                      placeholder="Enter Material Code"
+                      value={materialcode}
+                      onChange={(e) => setMaterialcode(e.target.value)}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="materialQuantity">Quantity</label>
+                    <input
+                      type="text"
+                      className="form-control bg-secondary"
+                      id="materialQuantity"
+                      placeholder="Enter Quantity"
+                      value={quantity}
+                      onChange={(e) => setQuantity(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  {" "}
+                  {/* Second column */}
+                  <div className="form-group">
+                    <label htmlFor="supplierCode">Supplier Code</label>
+                    <select
+                      className="form-control bg-secondary"
+                      value={suppliercode}
+                      onChange={(e) => setSuppliercode(e.target.value)}
+                    >
+                      <option value="" disabled selected>
+                        - Select One -
                       </option>
-                    );
-                  })}
-                </select>
-              </div>
-              <div className="form-group">
-                <label htmlFor="materialPrice">Price</label>
-                <input
-                  type="text"
-                  className="form-control bg-secondary"
-                  id="materialPrice"
-                  placeholder="Enter price"
-                  value={price}
-                  onChange={(e) => setPrice(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label>Date</label>
-                <input
-                  type="date"
-                  className="form-control bg-secondary"
-                  id="birthdate"
-                  name="birthdate"
-                  value={date}
-                  onChange={(e) => setDate(e.target.value)}
-                />
+                      {supplierlist.map((item) => (
+                        <option
+                          key={item.suppliercode}
+                          value={item.suppliercode}
+                        >
+                          {item.suppliercode}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="form-group">
+                    <label htmlFor="materialPrice">Price</label>
+                    <input
+                      type="text"
+                      className="form-control bg-secondary"
+                      id="materialPrice"
+                      placeholder="Enter Price"
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                    />
+                  </div>
+                </div>
+                <div className="col-md-6">
+                  {" "}
+                  {/* Third column */}
+                  <div className="form-group">
+                    <label>Date</label>
+                    <input
+                      type="date"
+                      className="form-control bg-secondary"
+                      id="birthdate"
+                      name="birthdate"
+                      value={date}
+                      onChange={(e) => setDate(e.target.value)}
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-            <div className="modal-footer justify-content-between">
-              <button
-                type="button"
-                className="btn btn-outline-danger"
-                data-dismiss="modal"
-                onClick={clearData}
-              >
-                Close
-              </button>
+            <div className="modal-footer align-right">
               <button
                 type="button"
                 className="btn btn-outline-success"
                 data-dismiss="modal"
                 onClick={handleSubmit}
               >
-                Save changes
-              </button>{" "}
+                Add & Save
+              </button>
             </div>
           </div>
-          {/* /.modal-content */}
         </div>
-        {/* /.modal-dialog */}
       </div>
+
       {/* /.modal */}
     </div>
   );

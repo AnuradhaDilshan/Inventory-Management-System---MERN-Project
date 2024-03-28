@@ -6,7 +6,7 @@ function SideBar() {
       {/* Main Sidebar Container */}
       <aside className="main-sidebar sidebar-dark-primary elevation-4">
         {/* Brand Logo */}
-        <a href="#" className="brand-link">
+        <a href="/inventory-dashboard" className="brand-link">
           <img
             src="dist/img/AdminLTELogo.png"
             alt="AdminLTE Logo"
@@ -27,7 +27,7 @@ function SideBar() {
               />
             </div>
             <div className="info">
-              <a href="#" className="d-block">
+              <a href="/inventory-dashboard" className="d-block">
                 Inventory Manager
               </a>
             </div>
@@ -43,27 +43,21 @@ function SideBar() {
               {/* Add icons to the links using the .nav-icon class
                 with font-awesome or any other icon font library */}
               <li className="nav-item">
-                <a href="/invmgtmaterial" className="nav-link">
+                <a href="/inventory-dashboard" className="nav-link">
+                  <i className="nav-icon far fa-file-alt" />
+                  <p>Dashboard</p>
+                </a>
+              </li>
+              <li className="nav-item">
+                <a href="/inventory-material" className="nav-link">
                   <i className="nav-icon fas fa-cubes" />
                   <p>Material</p>
                 </a>
               </li>
               <li className="nav-item">
-                <a href="/invmgtmaterial" className="nav-link">
-                  <i className="nav-icon fas fa-box" />
-                  <p>Packing Material</p>
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="/invmgtsupplier" className="nav-link">
+                <a href="/inventory-supplier" className="nav-link">
                   <i className="nav-icon fas fa-users" />
                   <p>Supplier</p>
-                </a>
-              </li>
-              <li className="nav-item">
-                <a href="#" className="nav-link">
-                  <i className="nav-icon far fa-file-alt" />
-                  <p>Stats</p>
                 </a>
               </li>
               <li className="nav-item">

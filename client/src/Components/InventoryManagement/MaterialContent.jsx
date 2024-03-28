@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import toastr from "toastr/toastr";
-import "toastr/build/toastr.css";
+import { toast, Toaster } from "react-hot-toast";
 
 function MaterialContent() {
   const [materialcode, setMaterialcode] = useState("");
@@ -26,7 +24,7 @@ function MaterialContent() {
       !price ||
       !date
     ) {
-      toastr.error("All fields are required");
+      toast.error("All Fields are Required");
     } else {
       const apiUrl = updateMode
         ? `http://localhost:3001/material/${selectedMaterial._id}` // Update existing supplier
@@ -46,12 +44,12 @@ function MaterialContent() {
 
       axios[updateMode ? "put" : "post"](apiUrl, requestData)
         .then((result) => {
-          toastr.success(result.data);
+          toast.success(result.data);
           setMaterialcode("");
           setMaterialname("");
-          setQuantity(0);
+          setQuantity("");
           setSuppliercode("");
-          setPrice(0);
+          setPrice("");
           setDate("");
           getData();
           setUpdateMode(false); // Reset update mode after submission
@@ -73,10 +71,14 @@ function MaterialContent() {
     setSelectedMaterial(material); // Set selected supplier for update
   };
 
+  const openModalForDelete = (material) => {
+    setSelectedMaterial(material);
+  };
+
   const handleDelete = async (id) => {
     try {
       const data = await axios.delete("http://localhost:3001/material/" + id);
-      toastr.success(data.data);
+      toast.success(data.data);
       getData();
     } catch (e) {
       console.log(e);
@@ -86,9 +88,9 @@ function MaterialContent() {
   const clearData = () => {
     setMaterialcode("");
     setMaterialname("");
-    setQuantity(0);
+    setQuantity("");
     setSuppliercode("");
-    setPrice(0);
+    setPrice("");
     setDate("");
   };
 
@@ -125,6 +127,7 @@ function MaterialContent() {
 
   return (
     <div>
+      <Toaster position="top-right" reverseOrder={false} />
       {/* Content Wrapper. Contains page content */}
       <div className="content-wrapper">
         {/* Content Header (Page header) */}
@@ -138,7 +141,7 @@ function MaterialContent() {
               <div className="col-sm-6">
                 <ol className="breadcrumb float-sm-right">
                   <li className="breadcrumb-item">
-                    <a href="#">Dashboard</a>
+                    <a href="/inventory-dashboard">Dashboard</a>
                   </li>
                   <li className="breadcrumb-item active">Material</li>
                 </ol>
@@ -191,7 +194,7 @@ function MaterialContent() {
                             data-toggle="modal"
                             data-target="#modal-add"
                           >
-                            Add material
+                            Add Material
                           </button>
                         </div>
                       </div>
@@ -294,7 +297,9 @@ function MaterialContent() {
                                   <button
                                     type="button"
                                     className="btn btn-light mr-1"
-                                    onClick={() => handleDelete(item._id)}
+                                    data-toggle="modal"
+                                    data-target="#modal-delete"
+                                    onClick={() => openModalForDelete(item)}
                                   >
                                     <svg
                                       xmlns="http://www.w3.org/2000/svg"
@@ -333,19 +338,21 @@ function MaterialContent() {
       {/* Add Material */}
       {/* /.modal */}
       <div className="modal fade" id="modal-add">
-        <div className="modal-dialog">
+        <div
+          className="modal-dialog"
+          style={{
+            margin: "0 auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "calc(100vh - (50px * 2))",
+            marginTop: "50px",
+            marginBottom: "50px",
+          }}
+        >
           <div className="modal-content dark-mode">
             <div className="modal-header">
               <h4 className="modal-title">Add Material</h4>
-              <button
-                type="button"
-                className="close"
-                data-dismiss="modal"
-                aria-label="Close"
-              >
-                <span aria-hidden="true">&times;</span>{" "}
-                {/* Add &times; for close symbol */}
-              </button>
             </div>
             <div className="modal-body">
               <div className="form-group">
@@ -440,14 +447,70 @@ function MaterialContent() {
                 </div>
               </div>
             </div>
-            <div className="modal-footer align-right">
+            <div
+              className="modal-footer align-right"
+              style={{
+                padding: "10px",
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
               <button
                 type="button"
-                className="btn btn-outline-success"
+                className="btn btn-outline-danger"
+                data-dismiss="modal"
+                onClick={clearData}
+              >
+                Close
+              </button>
+              <button
+                type="button"
+                className="btn btn-success"
                 data-dismiss="modal"
                 onClick={handleSubmit}
               >
                 Add & Save
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="modal fade" id="modal-delete">
+        <div
+          className="modal-dialog"
+          style={{
+            margin: "0 auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "calc(100vh - (50px * 2))",
+            marginTop: "50px",
+            marginBottom: "50px",
+          }}
+        >
+          <div className="modal-content dark-mode">
+            <div className="modal-header">
+              <h5 className="modal-title">Confirm Delete</h5>
+            </div>
+            <div className="modal-body">
+              Are you sure you want to delete this Material?
+            </div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-secondary"
+                data-dismiss="modal"
+              >
+                No
+              </button>
+              <button
+                type="button"
+                className="btn btn-danger"
+                onClick={handleDelete.bind(this, selectedMaterial?._id)}
+                data-dismiss="modal"
+              >
+                Yes, Delete
               </button>
             </div>
           </div>

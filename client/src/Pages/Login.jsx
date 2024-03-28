@@ -35,7 +35,7 @@ function Login() {
         })
         .then((result) => {
           const rolePaths = {
-            1: "/dashboardinv",
+            1: "/inventory-dashboard",
             2: "/dashboard1inv",
             3: "/dashboard2inv",
           };

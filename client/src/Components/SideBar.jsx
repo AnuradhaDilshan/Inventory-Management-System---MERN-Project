@@ -1,6 +1,34 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
+import {
+  MdOutlineBarChart,
+  MdOutlinePeople,
+  MdOutlineLogout,
+  MdWidgets,
+} from "react-icons/md";
+import { useLocation } from "react-router-dom";
 
 function SideBar() {
+  const location = useLocation();
+  const isActive = (path) => location.pathname === path;
+
+  const activeLinkStyle = {
+    backgroundColor: "#52555c",
+    borderRadius: "5px",
+    color: "white",
+    textDecoration: "none",
+  };
+
+  const [bottomMargin, setBottomMargin] = useState("150px");
+  useEffect(() => {
+    function handleResize() {
+      const newMargin = window.innerWidth < 768 ? "150px" : "370px";
+      setBottomMargin(newMargin);
+    }
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
   return (
     <div>
       {/* Main Sidebar Container */}
@@ -42,28 +70,65 @@ function SideBar() {
             >
               {/* Add icons to the links using the .nav-icon class
                 with font-awesome or any other icon font library */}
-              <li className="nav-item">
-                <a href="/inventory-dashboard" className="nav-link">
-                  <i className="nav-icon far fa-file-alt" />
-                  <p>Dashboard</p>
+              <li
+                className="nav-item"
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <a
+                  href="/inventory-dashboard"
+                  className="nav-link"
+                  style={
+                    isActive("/inventory-dashboard") ? activeLinkStyle : {}
+                  }
+                >
+                  <MdOutlineBarChart size={22} /> <p> Dashboard</p>
                 </a>
               </li>
-              <li className="nav-item">
-                <a href="/inventory-material" className="nav-link">
-                  <i className="nav-icon fas fa-cubes" />
-                  <p>Material</p>
+              <li
+                className="nav-item"
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <a
+                  href="/inventory-material"
+                  className="nav-link"
+                  style={isActive("/inventory-material") ? activeLinkStyle : {}}
+                >
+                  <MdWidgets size={22} /> <p>Material</p>
                 </a>
               </li>
-              <li className="nav-item">
-                <a href="/inventory-supplier" className="nav-link">
-                  <i className="nav-icon fas fa-users" />
-                  <p>Supplier</p>
+              <li
+                className="nav-item"
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginBottom: bottomMargin,
+                }}
+              >
+                <a
+                  href="/inventory-supplier"
+                  className="nav-link"
+                  style={isActive("/inventory-supplier") ? activeLinkStyle : {}}
+                >
+                  <MdOutlinePeople size={22} /> <p>Supplier</p>
                 </a>
               </li>
-              <li className="nav-item">
-                <a href="/" className="nav-link">
-                  <i className="nav-icon fas fa-sign-out" />
-                  <p>Log Out</p>
+              <li
+                className="nav-item"
+                data-toggle="modal"
+                data-target="#modal-logout"
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <a className="nav-link">
+                  <MdOutlineLogout size={22} /> <p>Log Out</p>
                 </a>
               </li>
             </ul>
@@ -72,6 +137,44 @@ function SideBar() {
         </div>
         {/* /.sidebar */}
       </aside>
+
+      <div className="modal fade" id="modal-logout">
+        <div
+          className="modal-dialog"
+          style={{
+            margin: "0 auto",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            minHeight: "calc(100vh - (50px * 2))",
+            marginTop: "50px",
+            marginBottom: "50px",
+          }}
+        >
+          <div className="modal-content dark-mode">
+            <div className="modal-header">
+              <h5 className="modal-title">Confirm Session End</h5>
+            </div>
+            <div className="modal-body">Are you sure you want to Log Out?</div>
+            <div className="modal-footer">
+              <button
+                type="button"
+                className="btn btn-outline-secondary"
+                data-dismiss="modal"
+              >
+                No, I need to Stay
+              </button>
+              <button
+                type="button"
+                className="btn btn-outline-danger"
+                data-dismiss="modal"
+              >
+                Yes, Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

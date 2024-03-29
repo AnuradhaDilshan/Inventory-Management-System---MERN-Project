@@ -1,14 +1,14 @@
 import React from "react";
 import Header from "../Components/Header";
 import SideBar from "../Components/SideBar";
-import Home from "../Components/InventoryManagement/Home";
+import InventoryDashboard from "../Components/InventoryManagement/InventoryDashboard";
 
 function DashBoard() {
   return (
     <div>
       <Header />
       <SideBar />
-      <Home />
+      <InventoryDashboard />
     </div>
   );
 }

@@ -1,0 +1,110 @@
+.content-area-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.content-area-top .area-top-title {
+  color: #292929;
+}
+
+.content-area-top .area-top-l {
+  display: flex;
+  align-items: center;
+  column-gap: 6px;
+}
+
+.content-area-top .sidebar-open-btn {
+  display: inline-flex;
+  align-items: center;
+  display: none;
+  margin-bottom: -1px;
+  color: #292929;
+}
+
+@media (max-width: 768px) {
+  .content-area-top .sidebar-open-btn {
+    display: inline-flex;
+  }
+}
+
+.content-area-top .date-range-wrapper {
+  display: inline-block;
+  box-shadow: rgba(0, 0, 0, 0.02) 0px 4px 12px;
+}
+
+.content-area-top .date-range-wrapper .rdrDateDisplay {
+  margin: 0;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.content-area-top .date-range-wrapper .rdrDateRangeWrapper {
+  position: relative;
+}
+
+.content-area-top .date-range-wrapper .rdrMonthAndYearWrapper {
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  background-color: #ffffff;
+  padding-top: 0;
+  height: 40px;
+  z-index: 1;
+}
+
+.content-area-top .date-range-wrapper .rdrMonth {
+  padding: 0;
+  z-index: 1;
+}
+
+.content-area-top .date-range-wrapper .rdrWeekDays {
+  position: absolute;
+  top: calc(100% + 40px);
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  height: 32px;
+  z-index: 1;
+}
+
+.content-area-top .date-range-wrapper .rdrDays {
+  position: absolute;
+  top: calc(100% + 40px + 32px);
+  left: 0;
+  width: 100%;
+  background-color: #ffffff;
+  z-index: 1;
+}
+
+.content-area-top .date-range-wrapper.hide-date-range .rdrMonthAndYearWrapper {
+  display: none;
+}
+
+.content-area-top .date-range-wrapper.hide-date-range .rdrMonth {
+  padding: 0;
+}
+
+.content-area-top .date-range-wrapper.hide-date-range .rdrWeekDays,
+.content-area-top .date-range-wrapper.hide-date-range .rdrDays {
+  display: none;
+}
+
+.content-area-top .date-range-wrapper .rdrDateDisplayWrapper {
+  background-color: #fff;
+  border-color: #fff;
+  outline: #fff;
+}
+
+.content-area-top .date-range-wrapper .rdrDateDisplayWrapper * {
+  background-color: #fff;
+  border-color: #fff;
+  outline: #fff;
+  box-shadow: none;
+  color: #676767;
+}

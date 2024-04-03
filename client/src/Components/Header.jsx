@@ -18,9 +18,7 @@ function Header() {
             </a>
           </li>
           <li className="nav-item d-none d-sm-inline-block">
-            <a href="/inventory-dashboard" className="nav-link">
-              Inventory Management System
-            </a>
+            <a className="nav-link">Inventory Management System</a>
           </li>
         </ul>
       </nav>

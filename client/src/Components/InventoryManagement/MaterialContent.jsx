@@ -211,8 +211,8 @@ function MaterialContent() {
                             <th className="text-center">Supplier Code</th>
                             <th className="text-center">Material Name</th>
                             <th className="text-center">Added Date</th>
-                            <th className="text-center">Quantity </th>
-                            <th className="text-right">Price</th>
+                            <th className="text-center">Quantity</th>
+                            <th className="text-right">Unit Price</th>
                             <th className="text-right">Total Price</th>
                             <th className="text-center">Edit</th>
                             <th className="text-center">Delete</th>
@@ -419,12 +419,12 @@ function MaterialContent() {
                     </select>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="materialPrice">Price</label>
+                    <label htmlFor="materialPrice">Unit Price</label>
                     <input
                       type="text"
                       className="form-control bg-secondary"
                       id="materialPrice"
-                      placeholder="Enter Price"
+                      placeholder="Enter Unit Price"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
                     />

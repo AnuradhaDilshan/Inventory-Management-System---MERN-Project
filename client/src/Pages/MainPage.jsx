@@ -11,6 +11,7 @@ import Product from "./InventoryManagment/Product";
 import Productp from "./InventoryManagment/productp";
 import Supplier from "./InventoryManagment/Supplier";
 import Supplierp from "./InventoryManagment/supplierP";
+import Exchange from "./InventoryManagment/Exchange.jsx";
 import Summary from "./InventoryManagment/Summary";
 import ProductPrice from "./InventoryManagment/ProductPrice";
 import MaterialPrice from "./InventoryManagment/MaterialPrice";
@@ -20,15 +21,19 @@ function MainPage() {
     <div>
       <Routes>
         <Route path="/" exact element={<Login />} />
+        {/* inventory manager */}
         <Route path="/inventory-dashboard" exact element={<DashBoard />} />
-        <Route path="/dashboard1inv" exact element={<DashBoard1 />} />
-        <Route path="/dashboard2inv" exact element={<DashBoard2 />} />
         <Route path="/inventory-material" exact element={<Material />} />
-        <Route path="/inventory-materialp" exact element={<Materialp />} />
-        <Route path="/product" exact element={<Product />} />
-        <Route path="/productp" exact element={<Productp />} />
         <Route path="/inventory-supplier" exact element={<Supplier />} />
-        <Route path="/inventory-supplierp" exact element={<Supplierp />} />
+        {/* product manager */}
+        <Route path="/product-dashboard" exact element={<DashBoard1 />} />
+        <Route path="/product-product" exact element={<Productp />} />
+        <Route path="/product-material" exact element={<Materialp />} />
+        <Route path="/product-supplier" exact element={<Supplierp />} />
+        <Route path="/product-exchange" exact element={<Exchange />} />
+        {/* finance manager */}
+        <Route path="/dashboard2inv" exact element={<DashBoard2 />} />
+        <Route path="/product" exact element={<Product />} />
         <Route path="/summary" exact element={<Summary />} />
         <Route path="/product-price" exact element={<ProductPrice />} />
         <Route path="/material-price" exact element={<MaterialPrice />} />

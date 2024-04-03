@@ -1,7 +1,7 @@
 import React from "react";
 import Header from "../../Components/Header";
 import SideBar1 from "../../Components/SideBar1";
-import SupplierContentP from "../../Components/InventoryManagement/SupplierContent";
+import SupplierContentP from "../../Components/InventoryManagement/SupplierContentP";
 
 function supplierP() {
   return (

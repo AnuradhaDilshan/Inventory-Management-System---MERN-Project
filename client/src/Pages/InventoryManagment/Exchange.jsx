@@ -1,16 +1,16 @@
 import React from "react";
 import Header from "../../Components/Header";
 import SideBar1 from "../../Components/SideBar1";
-import MaterialContentp from "../../Components/InventoryManagement/MaterialContentforproduct";
+import ExchangePage from "../../Components/InventoryManagement/ExchangeContent.jsx";
 
-function Materialp() {
+function Exchange() {
   return (
     <div>
       <Header />
       <SideBar1 />
-      <MaterialContentp />
+      <ExchangePage />
     </div>
   );
 }
 
-export default Materialp;
+export default Exchange;

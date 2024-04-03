@@ -2,102 +2,82 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast, Toaster } from "react-hot-toast";
 
-function ProductContent() {
-  const [productcode, setProductcode] = useState("");
-  const [productname, setProductname] = useState("");
+function ExchangeContent() {
+  const [materialcode, setMaterialcode] = useState("");
+  const [materialname, setMaterialname] = useState("");
   const [quantity, setQuantity] = useState("");
   const [suppliercode, setSuppliercode] = useState("");
   const [price, setPrice] = useState("");
   const [date, setDate] = useState("");
-  const [description, setDescription] = useState("");
-  const [photo, setPhoto] = useState("");
   const [supplierlist, setSupplierlist] = useState([]);
-  const [productlist, setProductlist] = useState([]);
+  const [materiallist, setMateriallist] = useState([]);
   const [updateMode, setUpdateMode] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
     if (
-      !productcode ||
-      !productname ||
-      !description ||
-      !photo ||
+      !materialcode ||
+      !materialname ||
       !quantity ||
       !suppliercode ||
       !price ||
       !date
     ) {
-      toast.error("All fields are required.");
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("productcode", productcode);
-    formData.append("productname", productname);
-    formData.append("description", description);
-    if (photo) formData.append("photo", photo);
-    formData.append("quantity", quantity);
-    formData.append("suppliercode", suppliercode);
-    formData.append("price", price);
-    formData.append("date", date);
-
-    const config = {
-      headers: { "Content-Type": "multipart/form-data" },
-    };
-
-    try {
+      toast.error("All Fields are Required");
+    } else {
       const apiUrl = updateMode
-        ? `http://localhost:3001/product/${selectedProduct._id}`
-        : "http://localhost:3001/product";
+        ? `http://localhost:3001/material/${selectedMaterial._id}` // Update existing supplier
+        : "http://localhost:3001/material"; // Add new supplier
 
-      const response = await axios[updateMode ? "put" : "post"](
-        apiUrl,
-        formData,
-        config
-      )
+      const requestData = updateMode
+        ? {
+            ...selectedMaterial,
+            materialcode,
+            materialname,
+            quantity,
+            suppliercode,
+            price,
+            date,
+          }
+        : { materialcode, materialname, quantity, suppliercode, price, date };
+
+      axios[updateMode ? "put" : "post"](apiUrl, requestData)
         .then((result) => {
           toast.success(result.data);
-          setProductcode("");
-          setProductname("");
-          description("");
-          photo("");
+          setMaterialcode("");
+          setMaterialname("");
           setQuantity("");
           setSuppliercode("");
           setPrice("");
           setDate("");
           getData();
-          setUpdateMode(false);
-          setSelectedProduct(null);
+          setUpdateMode(false); // Reset update mode after submission
+          setSelectedMaterial(null); // Reset selected supplier
         })
         .catch((err) => console.log(err));
-    } catch (e) {
-      console.log(e);
     }
   };
 
-  const openModalForUpdate = (product) => {
-    setProductcode(product.productcode);
-    setProductname(product.productname);
-    setDescription(product.description);
-    setPhoto(product.photo);
-    setQuantity(product.quantity);
-    setSuppliercode(product.suppliercode);
-    setPrice(product.price);
-    const dateValue = new Date(product.date).toISOString().split("T")[0];
+  const openModalForUpdate = (material) => {
+    setMaterialcode(material.materialcode);
+    setMaterialname(material.materialname);
+    setQuantity(material.quantity);
+    setSuppliercode(material.suppliercode);
+    setPrice(material.price);
+    const dateValue = new Date(material.date).toISOString().split("T")[0];
     setDate(dateValue);
     setUpdateMode(true); // Set update mode
-    setSelectedProduct(product); // Set selected supplier for update
+    setSelectedMaterial(material); // Set selected supplier for update
   };
 
-  const openModalForDelete = (product) => {
-    setSelectedProduct(product);
+  const openModalForDelete = (material) => {
+    setSelectedMaterial(material);
   };
 
   const handleDelete = async (id) => {
     try {
-      const data = await axios.delete("http://localhost:3001/product/" + id);
+      const data = await axios.delete("http://localhost:3001/material/" + id);
       toast.success(data.data);
       getData();
     } catch (e) {
@@ -106,10 +86,8 @@ function ProductContent() {
   };
 
   const clearData = () => {
-    setProductcode("");
-    setProductname("");
-    setDescription("");
-    setPhoto("");
+    setMaterialcode("");
+    setMaterialname("");
     setQuantity("");
     setSuppliercode("");
     setPrice("");
@@ -118,12 +96,12 @@ function ProductContent() {
 
   const getData = async () => {
     try {
-      let apiUrl = "http://localhost:3001/product";
+      let apiUrl = "http://localhost:3001/material";
       if (searchQuery.trim() !== "") {
-        apiUrl += `/search?productname=${searchQuery}`;
+        apiUrl += `/search?materialname=${searchQuery}`;
       }
       const data = await axios.get(apiUrl);
-      setProductlist(data.data);
+      setMateriallist(data.data);
     } catch (e) {
       console.log(e);
     }
@@ -157,7 +135,7 @@ function ProductContent() {
           <div className="container-fluid">
             <div className="row mb-2">
               <div className="col-sm-6">
-                <h1 className="m-0">Product</h1>
+                <h1 className="m-0">Exchange</h1>
               </div>
               {/* /.col */}
               <div className="col-sm-6">
@@ -165,7 +143,7 @@ function ProductContent() {
                   <li className="breadcrumb-item">
                     <a href="/product-dashboard">Dashboard</a>
                   </li>
-                  <li className="breadcrumb-item active">Product</li>
+                  <li className="breadcrumb-item active">Exchange</li>
                 </ol>
               </div>
               {/* /.col */}
@@ -184,7 +162,7 @@ function ProductContent() {
                 {/* Default box */}
                 <div className="card card-secondary">
                   <div className="card-header">
-                    <h3 className="card-title">Product Details</h3>
+                    <h3 className="card-title">Exchange Details</h3>
                     <div className="card-tools">
                       <button
                         type="button"
@@ -202,7 +180,7 @@ function ProductContent() {
                         <input
                           className="form-control form-control-sm"
                           type="text"
-                          placeholder="Search Product by Name"
+                          placeholder="Search Ex. Item by Name"
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                         />
@@ -216,7 +194,7 @@ function ProductContent() {
                             data-toggle="modal"
                             data-target="#modal-add"
                           >
-                            Add Product
+                            Add Exchange Item
                           </button>
                         </div>
                       </div>
@@ -229,26 +207,40 @@ function ProductContent() {
                         <thead>
                           <tr>
                             <th>No</th>
-                            <th className="text-center">Product Code</th>
-                            <th className="text-center">Material Supplier</th>
-                            <th className="text-center">Product Name</th>
+                            <th className="text-center">Material Code</th>
+                            <th className="text-center">Supplier Code</th>
+                            <th className="text-center">Material Name</th>
                             <th className="text-center">Added Date</th>
                             <th className="text-center">Quantity</th>
                             <th className="text-right">Unit Price</th>
+                            <th className="text-right">Total Price</th>
                             <th className="text-center">Edit</th>
                             <th className="text-center">Delete</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {productlist.map((item, index) => {
+                          {materiallist.map((item, index) => {
                             // Determine if the price and total price are whole numbers or not
                             const isPriceWholeNumber = item.price % 1 === 0;
+                            const isTotalPriceWholeNumber =
+                              (item.quantity * item.price) % 1 === 0;
 
                             // Format price with up to 3 decimal places and commas, omitting .000 for whole numbers
                             const formattedPrice = isPriceWholeNumber
                               ? item.price.toLocaleString("en-US")
                               : parseFloat(
                                   item.price.toFixed(3)
+                                ).toLocaleString("en-US", {
+                                  minimumFractionDigits: 1,
+                                  maximumFractionDigits: 3,
+                                });
+
+                            // Calculate total price and format with up to 3 decimal places and commas, omitting .000 for whole numbers
+                            const totalPrice = item.quantity * item.price;
+                            const formattedTotalPrice = isTotalPriceWholeNumber
+                              ? totalPrice.toLocaleString("en-US")
+                              : parseFloat(
+                                  totalPrice.toFixed(3)
                                 ).toLocaleString("en-US", {
                                   minimumFractionDigits: 1,
                                   maximumFractionDigits: 3,
@@ -261,18 +253,21 @@ function ProductContent() {
                               <tr key={item._id}>
                                 <td>{index + 1}</td>
                                 <td className="text-center">
-                                  {item.productcode}
+                                  {item.materialcode}
                                 </td>
                                 <td className="text-center">
                                   {item.suppliercode}
                                 </td>
                                 <td className="text-center">
-                                  {item.productname}
+                                  {item.materialname}
                                 </td>
                                 <td className="text-center">{displayDate}</td>
                                 <td className="text-center">{item.quantity}</td>
                                 <td className="text-right">
                                   LKR {formattedPrice}
+                                </td>
+                                <td className="text-right">
+                                  LKR {formattedTotalPrice}
                                 </td>
                                 <td className="text-center">
                                   <button
@@ -340,7 +335,7 @@ function ProductContent() {
       </div>
       {/* /.content-wrapper */}
 
-      {/* Add Product */}
+      {/* Add Material */}
       {/* /.modal */}
       <div className="modal fade" id="modal-add">
         <div
@@ -351,35 +346,24 @@ function ProductContent() {
             alignItems: "center",
             justifyContent: "center",
             minHeight: "calc(100vh - (50px * 2))",
-            marginTop: "40px",
+            marginTop: "50px",
             marginBottom: "50px",
           }}
         >
           <div className="modal-content dark-mode">
             <div className="modal-header">
-              <h4 className="modal-title">Add Product</h4>
+              <h4 className="modal-title">Add Material</h4>
             </div>
             <div className="modal-body">
               <div className="form-group">
-                <label htmlFor="productName">Product Name</label>
+                <label htmlFor="materialName">Material Name</label>
                 <input
                   type="text"
                   className="form-control bg-secondary"
-                  id="productName"
-                  placeholder="Enter Product Name"
-                  value={productname}
-                  onChange={(e) => setProductname(e.target.value)}
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="productDesciption">Product Description</label>
-                <textarea
-                  type="text"
-                  className="form-control bg-secondary"
-                  id="productDesciption"
-                  placeholder="Enter Product Desciption"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
+                  id="materialName"
+                  placeholder="Enter Material Name"
+                  value={materialname}
+                  onChange={(e) => setMaterialname(e.target.value)}
                 />
               </div>
               <div className="row">
@@ -389,22 +373,22 @@ function ProductContent() {
                   {" "}
                   {/* First column */}
                   <div className="form-group">
-                    <label htmlFor="productCode">Product Code</label>
+                    <label htmlFor="materialCode">Material Code</label>
                     <input
                       type="text"
                       className="form-control bg-secondary"
-                      id="productCode"
-                      placeholder="Enter Product Code"
-                      value={productcode}
-                      onChange={(e) => setProductcode(e.target.value)}
+                      id="materialCode"
+                      placeholder="Enter Material Code"
+                      value={materialcode}
+                      onChange={(e) => setMaterialcode(e.target.value)}
                     />
                   </div>
                   <div className="form-group">
-                    <label htmlFor="productQuantity">Quantity</label>
+                    <label htmlFor="materialQuantity">Quantity</label>
                     <input
                       type="text"
                       className="form-control bg-secondary"
-                      id="productQuantity"
+                      id="materialQuantity"
                       placeholder="Enter Quantity"
                       value={quantity}
                       onChange={(e) => setQuantity(e.target.value)}
@@ -412,6 +396,8 @@ function ProductContent() {
                   </div>
                 </div>
                 <div className="col-md-6">
+                  {" "}
+                  {/* Second column */}
                   <div className="form-group">
                     <label htmlFor="supplierCode">Supplier Code</label>
                     <select
@@ -433,11 +419,11 @@ function ProductContent() {
                     </select>
                   </div>
                   <div className="form-group">
-                    <label htmlFor="productPrice"> Unit Price</label>
+                    <label htmlFor="materialPrice">Unit Price</label>
                     <input
                       type="text"
                       className="form-control bg-secondary"
-                      id="productPrice"
+                      id="materialPrice"
                       placeholder="Enter Unit Price"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
@@ -456,21 +442,6 @@ function ProductContent() {
                       name="birthdate"
                       value={date}
                       onChange={(e) => setDate(e.target.value)}
-                    />
-                  </div>
-                </div>
-                <div className="col-md-6">
-                  {" "}
-                  {/* Third column */}
-                  <div className="form-group">
-                    <label>Image</label>
-                    <input
-                      type="file"
-                      className="form-control bg-secondary"
-                      id="photo"
-                      name="photo"
-                      onChange={(e) => setPhoto(e.target.files[0])}
-                      style={{ padding: "3.5px" }}
                     />
                   </div>
                 </div>
@@ -523,7 +494,7 @@ function ProductContent() {
               <h5 className="modal-title">Confirm Delete</h5>
             </div>
             <div className="modal-body">
-              Are you sure you want to delete this Product?
+              Are you sure you want to delete this Material?
             </div>
             <div className="modal-footer">
               <button
@@ -536,7 +507,7 @@ function ProductContent() {
               <button
                 type="button"
                 className="btn btn-danger"
-                onClick={handleDelete.bind(this, selectedProduct?._id)}
+                onClick={handleDelete.bind(this, selectedMaterial?._id)}
                 data-dismiss="modal"
               >
                 Yes, Delete
@@ -551,4 +522,4 @@ function ProductContent() {
   );
 }
 
-export default ProductContent;
+export default ExchangeContent;

@@ -1,10 +1,14 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const formidable = require("express-formidable");
+const fs = require("fs");
 const UserModel = require("./server/models/User");
 const SuppliersModel = require("./server/models/Supplier");
 const MaterialModel = require("./server/models/Material");
 const ProductModel = require("./server/models/Product");
+const ExchangeModel = require("./server/models/Exchange");
+const slugify = require("slugify");
 
 const app = express();
 
@@ -38,6 +42,8 @@ app.post("/login", (req, res) => {
       res.status(500).json("Internal Server Error");
     });
 });
+
+// --------------------------------------------------------
 
 //supplierCreate
 app.post("/supplier", async (req, res) => {
@@ -110,6 +116,8 @@ app.delete("/supplier/:id", async (req, res) => {
   }
 });
 
+// --------------------------------------------------------
+
 //materialCreate
 app.post("/material", async (req, res) => {
   try {
@@ -173,10 +181,48 @@ app.delete("/material/:id", async (req, res) => {
 // --------------------------------------------------------
 
 //productCreate
-app.post("/productp", async (req, res) => {
+app.post("/product", formidable(), async (req, res) => {
   try {
-    const product = await ProductModel.create(req.body);
-    res.json("Product created");
+    const {
+      productcode,
+      productname,
+      description,
+      quantity,
+      suppliercode,
+      price,
+      date,
+    } = req.fields;
+    const { photo } = req.files;
+    switch (true) {
+      case !productcode:
+        return res.status(500).send({ error: "Product Code is Required" });
+      case !productname:
+        return res.status(500).send({ error: "Product Name is Required" });
+      case !description:
+        return res.status(500).send({ error: "Description is Required" });
+      case !quantity:
+        return res.status(500).send({ error: "Quantity is Required" });
+      case !suppliercode:
+        return res.status(500).send({ error: "Supplier Code is Required" });
+      case !price:
+        return res.status(500).send({ error: "Price is Required" });
+      case !date:
+        return res.status(500).send({ error: "Date is Required" });
+      case photo && photo.size > 3000000:
+        return res
+          .status(500)
+          .send({ error: "Photo is Required and Should be less then 3MB" });
+    }
+    const product = await ProductModel.create({
+      ...req.fields,
+      slug: slugify(productname),
+    });
+    if (photo) {
+      product.photo.data = fs.readFileSync(photo.path);
+      product.photo.contentType = photo.type;
+    }
+    await product.save();
+    res.json("Product Created");
   } catch (error) {
     console.error("Error:", error);
     res.status(500).json("Internal Server Error");
@@ -184,7 +230,7 @@ app.post("/productp", async (req, res) => {
 });
 
 //productRead
-app.get("/productp", async (req, res) => {
+app.get("/product", async (req, res) => {
   try {
     const products = await ProductModel.find();
     res.json(products);
@@ -195,7 +241,7 @@ app.get("/productp", async (req, res) => {
 });
 
 //productReadSearch
-app.get("/productp/search", async (req, res) => {
+app.get("/product/search", async (req, res) => {
   try {
     const { productname } = req.query;
 
@@ -209,24 +255,60 @@ app.get("/productp/search", async (req, res) => {
 });
 
 //productUpdate
-app.put("/productp/:id", async (req, res) => {
+app.put("/product/:id", formidable(), async (req, res) => {
   try {
+    const {
+      productcode,
+      productname,
+      description,
+      quantity,
+      suppliercode,
+      price,
+      date,
+    } = req.fields;
+    const { photo } = req.files;
+    switch (true) {
+      case !productcode:
+        return res.status(500).send({ error: "Product Code is Required" });
+      case !productname:
+        return res.status(500).send({ error: "Product Name is Required" });
+      case !description:
+        return res.status(500).send({ error: "Description is Required" });
+      case !quantity:
+        return res.status(500).send({ error: "Quantity is Required" });
+      case !suppliercode:
+        return res.status(500).send({ error: "Supplier Code is Required" });
+      case !price:
+        return res.status(500).send({ error: "Price is Required" });
+      case !date:
+        return res.status(500).send({ error: "Date is Required" });
+      case photo && photo.size > 3000000:
+        return res
+          .status(500)
+          .send({ error: "Photo is Required and Should be less then 3MB" });
+    }
     const product = await ProductModel.findByIdAndUpdate(
       req.params.id,
-      req.body,
+      { ...req.fields, slug: slugify(productname) },
       { new: true }
     );
-    res.json("Product updated");
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    if (photo) {
+      product.photo.data = fs.readFileSync(photo.path);
+      product.photo.contentType = photo.type;
+    }
+    await product.save();
+    res.json("Product Updated");
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json("Internal Server Error");
   }
 });
 
 //productDelete
-app.delete("/productp/:id", async (req, res) => {
+app.delete("/product/:id", async (req, res) => {
   try {
     await ProductModel.findByIdAndDelete(req.params.id);
-    res.json("Product deleted");
+    res.json("Product Deleted");
   } catch (err) {
     res.status(400).json({ error: err.message });
   }
@@ -234,6 +316,66 @@ app.delete("/productp/:id", async (req, res) => {
 
 // --------------------------------------------------------
 
+//exchangeCreate
+app.post("/exchange", async (req, res) => {
+  try {
+    const exchange = await ExchangeModel.create(req.body);
+    res.json("Ex.Item Created");
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json("Internal Server Error");
+  }
+});
+
+//exchangeRead
+app.get("/exchange", async (req, res) => {
+  try {
+    const exchanges = await ExchangeModel.find();
+    res.json(exchanges);
+  } catch (error) {
+    console.error("Error:", error);
+    res.status(500).json("Internal Server Error");
+  }
+});
+
+//exchangeReadSearch
+app.get("/exchange/search", async (req, res) => {
+  try {
+    const { exchangename } = req.query;
+
+    const exchanges = await ExchangeModel.find({
+      exchangename: { $regex: exchangename, $options: "i" },
+    });
+    res.json(exchanges);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+});
+
+//exchangeUpdate
+app.put("/exchange/:id", async (req, res) => {
+  try {
+    const exchange = await ExchangeModel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.json("Ex.Item Updated");
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
+//exchangeDelete
+app.delete("/exchange/:id", async (req, res) => {
+  try {
+    await ExchangeModel.findByIdAndDelete(req.params.id);
+    res.json("Ex.Item Deleted");
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 app.listen(3001, () => {
-  console.log("server is running ");
+  console.log("Server is Running on PORT: 3001 ");
 });

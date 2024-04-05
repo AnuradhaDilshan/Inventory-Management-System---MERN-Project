@@ -42,7 +42,7 @@ function ProductPriceContent() {
 
   const getData = async () => {
     try {
-      let apiUrl = "http://localhost:3001/productp";
+      let apiUrl = "http://localhost:3001/product";
       if (searchQuery.trim() !== "") {
         apiUrl += `/search?productname=${searchQuery}`;
       }

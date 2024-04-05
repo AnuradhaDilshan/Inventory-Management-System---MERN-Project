@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 
-function MaterialContentforproduct() {
+function MaterialContentforfinance() {
   const [supplierlist, setSupplierlist] = useState([]);
   const [materiallist, setMateriallist] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -52,7 +52,7 @@ function MaterialContentforproduct() {
               <div className="col-sm-6">
                 <ol className="breadcrumb float-sm-right">
                   <li className="breadcrumb-item">
-                    <a href="/product-dashboard">Dashboard</a>
+                    <a href="/finance-dashboard">Dashboard</a>
                   </li>
                   <li className="breadcrumb-item active">Material</li>
                 </ol>
@@ -115,18 +115,32 @@ function MaterialContentforproduct() {
                             <th className="text-center">Added Date</th>
                             <th className="text-center">Quantity</th>
                             <th className="text-right">Unit Price</th>
+                            <th className="text-right">Total Price</th>
                           </tr>
                         </thead>
                         <tbody>
                           {materiallist.map((item, index) => {
                             // Determine if the price and total price are whole numbers or not
                             const isPriceWholeNumber = item.price % 1 === 0;
+                            const isTotalPriceWholeNumber =
+                              (item.quantity * item.price) % 1 === 0;
 
                             // Format price with up to 3 decimal places and commas, omitting .000 for whole numbers
                             const formattedPrice = isPriceWholeNumber
                               ? item.price.toLocaleString("en-US")
                               : parseFloat(
                                   item.price.toFixed(3)
+                                ).toLocaleString("en-US", {
+                                  minimumFractionDigits: 1,
+                                  maximumFractionDigits: 3,
+                                });
+
+                            // Calculate total price and format with up to 3 decimal places and commas, omitting .000 for whole numbers
+                            const totalPrice = item.quantity * item.price;
+                            const formattedTotalPrice = isTotalPriceWholeNumber
+                              ? totalPrice.toLocaleString("en-US")
+                              : parseFloat(
+                                  totalPrice.toFixed(3)
                                 ).toLocaleString("en-US", {
                                   minimumFractionDigits: 1,
                                   maximumFractionDigits: 3,
@@ -152,6 +166,9 @@ function MaterialContentforproduct() {
                                 <td className="text-right">
                                   LKR {formattedPrice}
                                 </td>
+                                <td className="text-right">
+                                  LKR {formattedTotalPrice}
+                                </td>
                               </tr>
                             );
                           })}
@@ -172,11 +189,9 @@ function MaterialContentforproduct() {
         {/* /.content */}
       </div>
       {/* /.content-wrapper */}
-
-      {/* Add Material */}
       {/* /.modal */}
     </div>
   );
 }
 
-export default MaterialContentforproduct;
+export default MaterialContentforfinance;

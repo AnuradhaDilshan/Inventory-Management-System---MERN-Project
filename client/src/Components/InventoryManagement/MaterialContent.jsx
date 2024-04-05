@@ -321,7 +321,6 @@ function MaterialContent() {
                     </div>
                   </div>
                   {/* /.card-body */}
-                  <div className="card-footer"></div>
                   {/* /.card-footer*/}
                 </div>
                 {/* /.card */}

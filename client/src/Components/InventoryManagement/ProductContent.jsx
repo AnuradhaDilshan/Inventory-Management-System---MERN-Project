@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import { toast, Toaster } from "react-hot-toast";
 
 function ProductContent() {
@@ -143,6 +145,95 @@ function ProductContent() {
     getDataSupplier();
   }, [searchQuery]);
 
+  const downloadPdf = () => {
+    const doc = new jsPDF();
+
+    const now = new Date();
+    const dateOptions = { year: "numeric", month: "long", day: "numeric" };
+    const timeOptions = {
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    };
+    const generatedDate = now.toLocaleDateString("en-US", dateOptions);
+    const generatedTime = now.toLocaleTimeString("en-US", timeOptions);
+
+    // Titles
+    doc.setFontSize(26);
+    doc.text("Fashion Elegance", 14, 20);
+    doc.setFontSize(12);
+    doc.text("Product List Report", 14, 26);
+    doc.setFontSize(10);
+    doc.text(
+      `Generated Date & Time: ${generatedDate} ${generatedTime}`,
+      14,
+      32
+    );
+
+    // Adding a page border
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    doc.setLineWidth(0.5);
+    doc.rect(5, 5, pageWidth - 10, pageHeight - 10); // Draw a rectangle
+
+    // Table setup
+    const tableColumn = [
+      "Product Code",
+      "Supplier Code",
+      "Product Name",
+      "Added Date",
+      "Quantity",
+      "Unit Price",
+    ];
+    const tableRows = [];
+
+    productlist.forEach((item) => {
+      const date = formatDate(item.date);
+      // Determine if the price and total price are whole numbers or not
+      const isPriceWholeNumber = item.price % 1 === 0;
+
+      // Format price with up to 3 decimal places and commas, omitting .000 for whole numbers
+      const formattedPrice = isPriceWholeNumber
+        ? item.price.toLocaleString("en-US")
+        : parseFloat(item.price.toFixed(3)).toLocaleString("en-US", {
+            minimumFractionDigits: 1,
+            maximumFractionDigits: 3,
+          });
+
+      const productDetails = [
+        item.productcode,
+        item.suppliercode,
+        item.productname,
+        date,
+        item.quantity,
+        `LKR ${formattedPrice}`,
+      ];
+      tableRows.push(productDetails);
+    });
+
+    // Table styling options
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 38,
+      theme: "grid",
+      headStyles: { fillColor: [27, 130, 133] }, // Customize head row color
+      styles: { cellPadding: 2, fontSize: 8, cellWidth: "wrap" }, // General cell styling
+      columnStyles: {
+        0: { cellWidth: "auto" },
+        1: { cellWidth: "auto" },
+        2: { cellWidth: "auto" },
+        3: { cellWidth: "auto" },
+        4: { cellWidth: "auto" },
+        5: { cellWidth: "auto" },
+        6: { cellWidth: "auto" },
+      },
+    });
+
+    doc.save("product_list.pdf");
+  };
+
   const formatDate = (dateString) => {
     return new Date(dateString).toISOString().split("T")[0];
   };
@@ -210,6 +301,14 @@ function ProductContent() {
                       <div className="col-4"></div>
                       <div className="col-6">
                         <div className="float-right">
+                          <button
+                            type="button"
+                            className="btn btn-outline-secondary btn-sm"
+                            onClick={downloadPdf}
+                            style={{ marginRight: "15px" }}
+                          >
+                            Download Report
+                          </button>
                           <button
                             type="button"
                             class="btn btn-outline-secondary btn-sm"
@@ -326,7 +425,6 @@ function ProductContent() {
                     </div>
                   </div>
                   {/* /.card-body */}
-                  <div className="card-footer"></div>
                   {/* /.card-footer*/}
                 </div>
                 {/* /.card */}

@@ -1,14 +1,14 @@
 import React from "react";
 import Header from "../../Components/Header";
 import SideBar2 from "../../Components/SideBar2";
-import MaterialContent from "../../Components/InventoryManagement/MaterialContent";
+import MaterialContentforfinance from "../../Components/InventoryManagement/MaterialContentforfinance.jsx";
 
 function MaterialPrice() {
   return (
     <div>
       <Header />
       <SideBar2 />
-      <MaterialContent />
+      <MaterialContentforfinance />
     </div>
   );
 }

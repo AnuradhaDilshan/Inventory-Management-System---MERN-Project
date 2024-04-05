@@ -7,11 +7,16 @@ import {
   MdViewInAr,
 } from "react-icons/md";
 import { TbArrowsExchange2 } from "react-icons/tb";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 function SideBar1() {
   const location = useLocation();
   const isActive = (path) => location.pathname === path;
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    navigate("/");
+  };
 
   const activeLinkStyle = {
     backgroundColor: "#52555c",
@@ -198,6 +203,7 @@ function SideBar1() {
                 type="button"
                 className="btn btn-outline-danger"
                 data-dismiss="modal"
+                onClick={handleLogout}
               >
                 Yes, Log Out
               </button>

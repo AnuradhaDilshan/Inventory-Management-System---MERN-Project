@@ -316,17 +316,6 @@ app.delete("/product/:id", async (req, res) => {
 
 // --------------------------------------------------------
 
-//exchangeCreate
-app.post("/exchange", async (req, res) => {
-  try {
-    const exchange = await ExchangeModel.create(req.body);
-    res.json("Ex.Item Created");
-  } catch (error) {
-    console.error("Error:", error);
-    res.status(500).json("Internal Server Error");
-  }
-});
-
 //exchangeRead
 app.get("/exchange", async (req, res) => {
   try {
@@ -352,29 +341,24 @@ app.get("/exchange/search", async (req, res) => {
   }
 });
 
-//exchangeUpdate
-app.put("/exchange/:id", async (req, res) => {
+//exchangeStatusUpdate
+app.put("/exchange/:id/status", async (req, res) => {
+  const { id } = req.params;
+  const { status } = req.body;
+
   try {
-    const exchange = await ExchangeModel.findByIdAndUpdate(
-      req.params.id,
-      req.body,
+    const updatedItem = await ExchangeModel.findByIdAndUpdate(
+      id,
+      { status },
       { new: true }
     );
-    res.json("Ex.Item Updated");
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    res.json(updatedItem);
+  } catch (error) {
+    res.status(500).send(error.message);
   }
 });
 
-//exchangeDelete
-app.delete("/exchange/:id", async (req, res) => {
-  try {
-    await ExchangeModel.findByIdAndDelete(req.params.id);
-    res.json("Ex.Item Deleted");
-  } catch (err) {
-    res.status(400).json({ error: err.message });
-  }
-});
+// --------------------------------------------------------
 
 app.listen(3001, () => {
   console.log("Server is Running on PORT: 3001 ");

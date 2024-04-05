@@ -2,11 +2,11 @@ import React from "react";
 import "../../css/dashboard.css";
 import "../../css/areatop.css";
 import "../../css/areacard.css";
-import AreaCard from "./AreaCard";
-import AreaBarChart from "./AreaBarChart";
+import AreaCard from "./AreaCard.jsx";
+import AreaBarChart from "./AreaBarChart.jsx";
 import AreaProgressChart from "./AreaProgressChart.jsx";
 
-function ProductDashboard() {
+function FinanceDashboard() {
   return (
     <div>
       {/* Content Wrapper. Contains page content */}
@@ -86,4 +86,4 @@ function ProductDashboard() {
   );
 }
 
-export default ProductDashboard;
+export default FinanceDashboard;

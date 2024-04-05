@@ -1,6 +1,5 @@
 import { React } from "react";
 import { Routes, Route } from "react-router-dom";
-
 import Login from "./Login";
 import DashBoard from "./DashBoard";
 import DashBoard1 from "./DashBoard1";
@@ -32,11 +31,13 @@ function MainPage() {
         <Route path="/product-supplier" exact element={<Supplierp />} />
         <Route path="/product-exchange" exact element={<Exchange />} />
         {/* finance manager */}
-        <Route path="/dashboard2inv" exact element={<DashBoard2 />} />
-        <Route path="/product" exact element={<Product />} />
-        <Route path="/summary" exact element={<Summary />} />
+        <Route path="/finance-dashboard" exact element={<DashBoard2 />} />
         <Route path="/product-price" exact element={<ProductPrice />} />
         <Route path="/material-price" exact element={<MaterialPrice />} />
+
+        {/* <Route path="/dashboard2inv" exact element={<DashBoard2 />} />
+        <Route path="/product" exact element={<Product />} />
+        <Route path="/summary" exact element={<Summary />} /> */}
       </Routes>
     </div>
   );

@@ -12,21 +12,14 @@ function Login() {
   const updateStatesAndNavigate = (path) => {
     setUsername("");
     setPassword("");
-
-    // Delay the navigation and toast to ensure state update
-    setTimeout(() => {
-      navigate(path);
-      toast.success("Inventory has Good-Health", {
-        position: "top-right",
-      });
-    }, 0); // minimal timeout to ensure the execution after state updates
+    navigate(path);
   };
 
   const handleSubmit = async () => {
     if (!username) {
-      toast.error("Username is required");
+      toast.error("Username is Required");
     } else if (!password) {
-      toast.error("Password is required");
+      toast.error("Password is Required");
     } else {
       axios
         .post("http://localhost:3001/login", {
@@ -37,21 +30,21 @@ function Login() {
           const rolePaths = {
             1: "/inventory-dashboard",
             2: "/product-dashboard",
-            3: "/dashboard2inv",
+            3: "/finance-dashboard",
           };
           const path = rolePaths[result.data.role];
           if (path) {
             updateStatesAndNavigate(path);
           } else {
             // If role is not 1, 2, or 3
-            toast.error("Unexpected role value received.", {
+            toast.error("Something Wrong. Please Try Again.", {
               position: "top-right",
             });
           }
         })
         .catch((err) => {
           console.error("Login error:", err);
-          toast.error("Login failed. Please try again.", {
+          toast.error("Login Failed. Please Try Again.", {
             position: "top-right",
           });
         });
@@ -63,13 +56,16 @@ function Login() {
       <Toaster position="top-right" reverseOrder={false} />
       <div className="login-box">
         <div className="login-logo">
-          <a href="#">
+          <a>
             <b>Fashion Elegance</b> IMS
           </a>
         </div>
         {/* /.login-logo */}
         <div className="card">
-          <div className="card-body login-card-body">
+          <div
+            className="card-body login-card-body"
+            style={{ borderRadius: "20px" }}
+          >
             <p className="login-box-msg">Sign in to start your session</p>
             <div className="input-group mb-3">
               <input
@@ -81,7 +77,7 @@ function Login() {
               />
               <div className="input-group-append">
                 <div className="input-group-text">
-                  <span className="fas fa-envelope" />
+                  <span className="fas fa-user" />
                 </div>
               </div>
             </div>

@@ -6,12 +6,10 @@ import DashBoard1 from "./DashBoard1";
 import DashBoard2 from "./DashBoard2";
 import Material from "./InventoryManagment/Material";
 import Materialp from "./InventoryManagment/Materialp";
-import Product from "./InventoryManagment/Product";
 import Productp from "./InventoryManagment/productp";
 import Supplier from "./InventoryManagment/Supplier";
 import Supplierp from "./InventoryManagment/supplierP";
 import Exchange from "./InventoryManagment/Exchange.jsx";
-import Summary from "./InventoryManagment/Summary";
 import ProductPrice from "./InventoryManagment/ProductPrice";
 import MaterialPrice from "./InventoryManagment/MaterialPrice";
 
@@ -34,10 +32,6 @@ function MainPage() {
         <Route path="/finance-dashboard" exact element={<DashBoard2 />} />
         <Route path="/product-price" exact element={<ProductPrice />} />
         <Route path="/material-price" exact element={<MaterialPrice />} />
-
-        {/* <Route path="/dashboard2inv" exact element={<DashBoard2 />} />
-        <Route path="/product" exact element={<Product />} />
-        <Route path="/summary" exact element={<Summary />} /> */}
       </Routes>
     </div>
   );

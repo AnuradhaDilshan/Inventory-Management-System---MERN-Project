@@ -1,12 +1,118 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "../../css/dashboard.css";
 import "../../css/areatop.css";
 import "../../css/areacard.css";
 import AreaCard from "./AreaCard";
-import AreaBarChart from "./AreaBarChart";
-import AreaProgressChart from "./AreaProgressChart.jsx";
+import AreaProgressChartPro from "./AreaProgressChartPro.jsx";
+import axios from "axios";
 
 function ProductDashboard() {
+  const [quantity, setQuantity] = useState(0);
+  const [productlist, setProductlist] = useState([]);
+  const [exchangeCount, setExchangeCount] = useState(0);
+  const [pendingExchangesCount, setPendingExchangesCount] = useState(0);
+  const [minQuantityProduct, setMinQuantityProduct] = useState({
+    productname: "",
+    quantity: 0,
+  });
+
+  const calculateStockItemFill = () => {
+    const targetMinQuantity = 6000;
+    let fillPercentage = (quantity / targetMinQuantity) * 100;
+    fillPercentage = Math.min(Math.max(fillPercentage, 0), 100);
+    return fillPercentage;
+  };
+
+  const calculateSupplierFill = () => {
+    const targetCount = 15;
+    let fillPercentage = (exchangeCount / targetCount) * 100;
+    fillPercentage = Math.min(Math.max(fillPercentage, 0), 100);
+    return fillPercentage;
+  };
+
+  const calculateMinStockItemFill = () => {
+    const targetMinStock = 100;
+    let fillPercentage = (minQuantityProduct.quantity / targetMinStock) * 100;
+    fillPercentage = Math.min(Math.max(fillPercentage, 0), 100);
+    return fillPercentage;
+  };
+
+  const getData = async () => {
+    try {
+      let apiUrl = "http://localhost:3001/product";
+      const data = await axios.get(apiUrl);
+      const products = data.data;
+      setProductlist(products);
+      console.log(products);
+      const totalQuantity = data.data.reduce(
+        (acc, product) => acc + product.quantity,
+        0
+      );
+      setQuantity(totalQuantity);
+      if (products.length) {
+        const sortedProducts = [...products].sort(
+          (a, b) => a.quantity - b.quantity
+        );
+        const minQuantityProduct = sortedProducts[0];
+        setMinQuantityProduct({
+          productname: minQuantityProduct.productname,
+          quantity: minQuantityProduct.quantity,
+        });
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const getEx = async () => {
+    try {
+      let apiUrl = "http://localhost:3001/exchange";
+      const data = await axios.get(apiUrl);
+      const exchanges = data.data;
+      setExchangeCount(exchanges.length);
+      const pendingCount = exchanges.filter(
+        (exchange) => exchange.status === "Pending"
+      ).length;
+      setPendingExchangesCount(pendingCount);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const [opacity, setOpacity] = useState(-2);
+
+  // Fade in effect
+  useEffect(() => {
+    let fadeEffectIn = setInterval(() => {
+      if (opacity < 1) {
+        setOpacity((prevOpacity) => prevOpacity + 0.1);
+      } else {
+        clearInterval(fadeEffectIn);
+      }
+    }, 50);
+    return () => clearInterval(fadeEffectIn);
+  }, [opacity]);
+
+  // Fade out effect
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      let fadeEffectOut = setInterval(() => {
+        if (opacity > 0) {
+          setOpacity((prevOpacity) => prevOpacity - 0.1);
+        } else {
+          clearInterval(fadeEffectOut);
+        }
+      }, 50);
+      return () => clearInterval(fadeEffectOut);
+    }, 5000);
+    return () => clearTimeout(timer);
+  }, [opacity]);
+
+  useEffect(() => {
+    getData();
+    getEx();
+  }, []);
+
   return (
     <div>
       {/* Content Wrapper. Contains page content */}
@@ -20,9 +126,7 @@ function ProductDashboard() {
               </div>
               {/* /.col */}
               <div className="col-sm-6">
-                <ol className="breadcrumb float-sm-right">
-                  {/* New Add Area */}
-                </ol>
+                <ol className="breadcrumb float-sm-right"></ol>
               </div>
               {/* /.col */}
             </div>
@@ -39,32 +143,32 @@ function ProductDashboard() {
             <section className="content-area-cards">
               <AreaCard
                 className="area-card"
-                colors={["#e4e8ef", "#475be8"]}
-                percentFillValue={80}
+                colors={["#e4e8ef", "#6d6e6b"]}
+                percentFillValue={calculateStockItemFill()}
                 cardInfo={{
-                  title: "Todays Sales",
-                  value: "$20.4K",
-                  text: "We have sold 123 items.",
+                  title: "Total Product Stock",
+                  value: quantity,
+                  text: `Stock Items : ${productlist.length}`,
                 }}
               />
               <AreaCard
                 className="area-card"
-                colors={["#e4e8ef", "#4ce13f"]}
-                percentFillValue={50}
+                colors={["#e4e8ef", "#21bfc4"]}
+                percentFillValue={calculateSupplierFill()}
                 cardInfo={{
-                  title: "Todays Revenue",
-                  value: "$8.2K",
-                  text: "Available to payout",
+                  title: "Total Exchanges",
+                  value: `${exchangeCount}`,
+                  text: `Pending Count : ${pendingExchangesCount}`,
                 }}
               />
               <AreaCard
                 className="area-card"
-                colors={["#e4e8ef", "#f29a2e"]}
-                percentFillValue={40}
+                colors={["#e4e8ef", "#e8e81e"]}
+                percentFillValue={calculateMinStockItemFill()}
                 cardInfo={{
-                  title: "In Escrow",
-                  value: "$18.2K",
-                  text: "Available to payout",
+                  title: "Lowest Product Item",
+                  value: minQuantityProduct.productname || "N/A",
+                  text: `Quantity: ${minQuantityProduct.quantity || 0}`,
                 }}
               />
             </section>
@@ -74,8 +178,7 @@ function ProductDashboard() {
         <section className="content">
           <div className="container-fluid">
             <section className="content-area-charts">
-              <AreaBarChart />
-              <AreaProgressChart />
+              <AreaProgressChartPro />
             </section>
           </div>
         </section>

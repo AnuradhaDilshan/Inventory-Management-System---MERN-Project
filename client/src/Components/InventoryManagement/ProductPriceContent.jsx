@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
-import toastr from "toastr/toastr";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import "toastr/build/toastr.css";
@@ -222,7 +220,7 @@ function ProductPriceContent() {
                   </div>
                   <div className="card-body">
                     <div className="row mb-3">
-                      <div className="col-3">
+                      <div className="col-2">
                         <input
                           className="form-control form-control-sm"
                           type="text"
@@ -231,7 +229,7 @@ function ProductPriceContent() {
                           onChange={(e) => setSearchQuery(e.target.value)}
                         />
                       </div>
-                      <div className="col-3"></div>
+                      <div className="col-4"></div>
                       <div className="col-6">
                         <div className="float-right">
                           <button
@@ -251,17 +249,18 @@ function ProductPriceContent() {
                       <table className="table table-head-fixed text-nowrap">
                         <thead>
                           <tr>
-                            <th>Product Code</th>
-                            <th>Supplier Code</th>
-                            <th>Product Name</th>
-                            <th>Added Date</th>
-                            <th>Quantity </th>
-                            <th>Price</th>
-                            <th>Total Price</th>
+                            <th>No</th>
+                            <th className="text-center">Product Code</th>
+                            <th className="text-center">Supplier Code</th>
+                            <th className="text-center">Product Name</th>
+                            <th className="text-center">Added Date</th>
+                            <th className="text-center">Quantity </th>
+                            <th className="text-right">Unit Price</th>
+                            <th className="text-right">Total Price</th>
                           </tr>
                         </thead>
                         <tbody>
-                          {productlist.map((item) => {
+                          {productlist.map((item, index) => {
                             // Determine if the price and total price are whole numbers or not
                             const isPriceWholeNumber = item.price % 1 === 0;
                             const isTotalPriceWholeNumber =
@@ -293,13 +292,24 @@ function ProductPriceContent() {
 
                             return (
                               <tr key={item._id}>
-                                <td>{item.productcode}</td>
-                                <td>{item.suppliercode}</td>
-                                <td>{item.productname}</td>
-                                <td>{displayDate}</td>
-                                <td>{item.quantity}</td>
-                                <td>LKR {formattedPrice}</td>
-                                <td>LKR {formattedTotalPrice}</td>
+                                <td>{index + 1}</td>
+                                <td className="text-center">
+                                  {item.productcode}
+                                </td>
+                                <td className="text-center">
+                                  {item.suppliercode}
+                                </td>
+                                <td className="text-center">
+                                  {item.productname}
+                                </td>
+                                <td className="text-center">{displayDate}</td>
+                                <td className="text-center">{item.quantity}</td>
+                                <td className="text-right">
+                                  LKR {formattedPrice}
+                                </td>
+                                <td className="text-right">
+                                  LKR {formattedTotalPrice}
+                                </td>
                               </tr>
                             );
                           })}
@@ -308,7 +318,6 @@ function ProductPriceContent() {
                     </div>
                   </div>
                   {/* /.card-body */}
-                  <div className="card-footer"></div>
                   {/* /.card-footer*/}
                 </div>
                 {/* /.card */}

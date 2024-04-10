@@ -124,7 +124,7 @@
   height: 100%;
   width: 0;
   border-radius: 100vh;
-  background-color: #475be8;
+  background-color: #6d6e6b;
   animation: fillAnimation 2s ease-out forwards;
 }
 

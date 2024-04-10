@@ -1,60 +1,55 @@
+import React, { useEffect, useState } from "react";
 import "../../css/areacharts.css";
-
-const data = [
-  {
-    id: 1,
-    name: "Jeans",
-    percentValues: 70,
-  },
-  {
-    id: 2,
-    name: "Shirts",
-    percentValues: 40,
-  },
-  {
-    id: 3,
-    name: "Belts",
-    percentValues: 60,
-  },
-  {
-    id: 4,
-    name: "Caps",
-    percentValues: 80,
-  },
-  {
-    id: 5,
-    name: "Others",
-    percentValues: 20,
-  },
-];
+import axios from "axios";
 
 const AreaProgressChart = () => {
+  const [materiallist, setMateriallist] = useState([]);
+
+  const getData = async () => {
+    try {
+      let apiUrl = "http://localhost:3001/material";
+      const response = await axios.get(apiUrl);
+      setMateriallist(response.data);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const calculateStockItemFill = (quantity) => {
+    const targetMinQuantity = 800;
+    let fillPercentage = (quantity / targetMinQuantity) * 100;
+    fillPercentage = Math.min(Math.max(fillPercentage, 0), 100);
+    return fillPercentage;
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
   return (
     <div className="progress-bar">
       <div className="progress-bar-info">
-        <h4 className="progress-bar-title">Most Sold Items</h4>
+        <h4 className="progress-bar-title">Material Stocks</h4>
       </div>
       <div className="progress-bar-list">
-        {data?.map((progressbar) => {
-          return (
-            <div className="progress-bar-item" key={progressbar.id}>
-              <div className="bar-item-info">
-                <p className="bar-item-info-name">{progressbar.name}</p>
-                <p className="bar-item-info-value">
-                  {progressbar.percentValues}
-                </p>
-              </div>
-              <div className="bar-item-full">
-                <div
-                  className="bar-item-filled"
-                  style={{
-                    width: `${progressbar.percentValues}%`,
-                  }}
-                ></div>
-              </div>
+        {materiallist.map((material) => (
+          <div className="progress-bar-item" key={material.id}>
+            <div className="bar-item-info">
+              <p className="bar-item-info-name">{material.materialname}</p>
+              <p className="bar-item-info-value">{material.quantity}</p>
             </div>
-          );
-        })}
+            <div className="bar-item-full">
+              <div
+                className="bar-item-filled"
+                style={{
+                  "--target-width": `${calculateStockItemFill(
+                    material.quantity
+                  )}%`,
+                }}
+              ></div>
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );

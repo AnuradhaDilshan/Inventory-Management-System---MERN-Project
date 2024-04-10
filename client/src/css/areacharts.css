@@ -1,6 +1,5 @@
 .content-area-charts {
   display: grid;
-  grid-template-columns: 2fr 1fr;
   gap: 16px;
 }
 
@@ -126,4 +125,14 @@
   width: 0;
   border-radius: 100vh;
   background-color: #475be8;
+  animation: fillAnimation 2s ease-out forwards;
+}
+
+@keyframes fillAnimation {
+  from {
+    width: 0%;
+  }
+  to {
+    width: var(--target-width);
+  }
 }

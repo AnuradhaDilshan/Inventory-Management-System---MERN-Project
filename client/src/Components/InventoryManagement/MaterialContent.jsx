@@ -213,7 +213,6 @@ function MaterialContent() {
                             <th className="text-center">Added Date</th>
                             <th className="text-center">Quantity</th>
                             <th className="text-right">Unit Price</th>
-                            <th className="text-right">Total Price</th>
                             <th className="text-center">Edit</th>
                             <th className="text-center">Delete</th>
                           </tr>
@@ -222,25 +221,12 @@ function MaterialContent() {
                           {materiallist.map((item, index) => {
                             // Determine if the price and total price are whole numbers or not
                             const isPriceWholeNumber = item.price % 1 === 0;
-                            const isTotalPriceWholeNumber =
-                              (item.quantity * item.price) % 1 === 0;
 
                             // Format price with up to 3 decimal places and commas, omitting .000 for whole numbers
                             const formattedPrice = isPriceWholeNumber
                               ? item.price.toLocaleString("en-US")
                               : parseFloat(
                                   item.price.toFixed(3)
-                                ).toLocaleString("en-US", {
-                                  minimumFractionDigits: 1,
-                                  maximumFractionDigits: 3,
-                                });
-
-                            // Calculate total price and format with up to 3 decimal places and commas, omitting .000 for whole numbers
-                            const totalPrice = item.quantity * item.price;
-                            const formattedTotalPrice = isTotalPriceWholeNumber
-                              ? totalPrice.toLocaleString("en-US")
-                              : parseFloat(
-                                  totalPrice.toFixed(3)
                                 ).toLocaleString("en-US", {
                                   minimumFractionDigits: 1,
                                   maximumFractionDigits: 3,
@@ -265,9 +251,6 @@ function MaterialContent() {
                                 <td className="text-center">{item.quantity}</td>
                                 <td className="text-right">
                                   LKR {formattedPrice}
-                                </td>
-                                <td className="text-right">
-                                  LKR {formattedTotalPrice}
                                 </td>
                                 <td className="text-center">
                                   <button
@@ -468,7 +451,7 @@ function MaterialContent() {
                 data-dismiss="modal"
                 onClick={handleSubmit}
               >
-                Add & Save
+                Save
               </button>
             </div>
           </div>

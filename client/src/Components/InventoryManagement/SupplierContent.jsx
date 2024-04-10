@@ -257,7 +257,6 @@ function SupplierContent() {
                     </div>
                   </div>
                   {/* /.card-body */}
-                  <div className="card-footer"></div>
                   {/* /.card-footer*/}
                 </div>
                 {/* /.card */}
@@ -373,7 +372,7 @@ function SupplierContent() {
                 data-dismiss="modal"
                 onClick={handleSubmit}
               >
-                Add & Save
+                Save
               </button>
             </div>
           </div>

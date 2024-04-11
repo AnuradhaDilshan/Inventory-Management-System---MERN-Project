@@ -185,7 +185,7 @@ function ProductPriceContent() {
               <div className="col-sm-6">
                 <ol className="breadcrumb float-sm-right">
                   <li className="breadcrumb-item">
-                    <a href="#">Dashboard</a>
+                    <a href="/finance-dashboard">Dashboard</a>
                   </li>
                   <li className="breadcrumb-item active">Product Price</li>
                 </ol>
@@ -224,7 +224,7 @@ function ProductPriceContent() {
                         <input
                           className="form-control form-control-sm"
                           type="text"
-                          placeholder="search product by name"
+                          placeholder="Search Product by Name"
                           value={searchQuery}
                           onChange={(e) => setSearchQuery(e.target.value)}
                         />

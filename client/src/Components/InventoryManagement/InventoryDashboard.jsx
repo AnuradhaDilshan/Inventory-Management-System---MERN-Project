@@ -70,7 +70,6 @@ function InventoryDashboard() {
       const data = await axios.get(apiUrl);
       const materials = data.data;
       setMateriallist(materials);
-      console.log(materials);
       const totalQuantity = data.data.reduce(
         (acc, material) => acc + material.quantity,
         0

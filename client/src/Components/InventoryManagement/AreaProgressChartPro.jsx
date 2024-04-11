@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "../../css/areacharts.css";
+import "../../css/areachartspro.css";
 import axios from "axios";
 
 const AreaProgressChartPro = () => {
@@ -43,7 +43,7 @@ const AreaProgressChartPro = () => {
             </div>
             <div className="bar-item-full">
               <div
-                className="bar-item-filled"
+                className="bar-item-filled2"
                 style={{
                   "--target-width": `${calculateStockItemFill(
                     product.quantity

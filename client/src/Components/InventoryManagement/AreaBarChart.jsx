@@ -1,137 +1,59 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 import {
   BarChart,
   Bar,
   XAxis,
   YAxis,
   Tooltip,
-  Legend,
   ResponsiveContainer,
 } from "recharts";
 import "../../css/areacharts.css";
 
-const data = [
-  {
-    month: "Jan",
-    loss: 70,
-    profit: 100,
-  },
-  {
-    month: "Feb",
-    loss: 55,
-    profit: 85,
-  },
-  {
-    month: "Mar",
-    loss: 35,
-    profit: 90,
-  },
-  {
-    month: "April",
-    loss: 90,
-    profit: 70,
-  },
-  {
-    month: "May",
-    loss: 55,
-    profit: 80,
-  },
-  {
-    month: "Jun",
-    loss: 30,
-    profit: 50,
-  },
-  {
-    month: "Jul",
-    loss: 32,
-    profit: 75,
-  },
-  {
-    month: "Aug",
-    loss: 62,
-    profit: 86,
-  },
-  {
-    month: "Sep",
-    loss: 55,
-    profit: 78,
-  },
-];
-
 const AreaBarChart = () => {
-  const formatTooltipValue = (value) => {
-    return `${value}k`;
+  const [productData, setProductData] = useState([]);
+
+  const fetchProductData = async () => {
+    try {
+      let apiUrl = "http://localhost:3001/product";
+      const response = await axios.get(apiUrl);
+      const products = response.data;
+
+      const formattedData = products.map((product) => ({
+        Name: product.productname,
+        Price: product.quantity * product.price,
+      }));
+
+      setProductData(formattedData);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
-  const formatYAxisLabel = (value) => {
-    return `${value}k`;
-  };
+  useEffect(() => {
+    fetchProductData();
+  }, []);
 
-  const formatLegendValue = (value) => {
-    return value.charAt(0).toUpperCase() + value.slice(1);
-  };
+  const formatTooltipValue = (value) => `${value.toLocaleString("en-US")} LKR`;
+  const formatYAxisLabel = (value) => `${value.toLocaleString("en-US")} LKR`;
 
   return (
     <div className="bar-chart">
-      <div className="bar-chart-info">
-        <h5 className="bar-chart-title">Total Revenue</h5>
-        <div className="chart-info-data">
-          <div className="info-data-value">$50.4K</div>
-        </div>
-      </div>
       <div className="bar-chart-wrapper">
-        <ResponsiveContainer width="100%" height="100%">
+        <ResponsiveContainer width="100%" height={300}>
           <BarChart
-            width={500}
-            height={200}
-            data={data}
+            data={productData}
             margin={{
-              top: 5,
-              right: 5,
-              left: 0,
+              top: 20,
+              right: 30,
+              left: 20,
               bottom: 5,
             }}
           >
-            <XAxis
-              padding={{ left: 10 }}
-              dataKey="month"
-              tickSize={0}
-              axisLine={false}
-            />
-            <YAxis
-              padding={{ bottom: 10, top: 10 }}
-              tickFormatter={formatYAxisLabel}
-              tickCount={6}
-              axisLine={false}
-              tickSize={0}
-            />
-            <Tooltip
-              formatter={formatTooltipValue}
-              cursor={{ fill: "transparent" }}
-            />
-            <Legend
-              iconType="circle"
-              iconSize={10}
-              verticalAlign="top"
-              align="right"
-              formatter={formatLegendValue}
-            />
-            <Bar
-              dataKey="profit"
-              fill="#475be8"
-              activeBar={false}
-              isAnimationActive={false}
-              barSize={24}
-              radius={[4, 4, 4, 4]}
-            />
-            <Bar
-              dataKey="loss"
-              fill="#e3e7fc"
-              activeBar={false}
-              isAnimationActive={false}
-              barSize={24}
-              radius={[4, 4, 4, 4]}
-            />
+            <XAxis dataKey="Name" />
+            <YAxis tickFormatter={formatYAxisLabel} />
+            <Tooltip formatter={formatTooltipValue} />
+            <Bar dataKey="Price" fill="#475be8" barSize={20} />
           </BarChart>
         </ResponsiveContainer>
       </div>

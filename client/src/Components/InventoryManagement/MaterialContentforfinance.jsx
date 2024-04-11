@@ -46,7 +46,7 @@ function MaterialContentforfinance() {
           <div className="container-fluid">
             <div className="row mb-2">
               <div className="col-sm-6">
-                <h1 className="m-0">Material</h1>
+                <h1 className="m-0">Material Price List</h1>
               </div>
               {/* /.col */}
               <div className="col-sm-6">
@@ -54,7 +54,7 @@ function MaterialContentforfinance() {
                   <li className="breadcrumb-item">
                     <a href="/finance-dashboard">Dashboard</a>
                   </li>
-                  <li className="breadcrumb-item active">Material</li>
+                  <li className="breadcrumb-item active">Material Price</li>
                 </ol>
               </div>
               {/* /.col */}
@@ -73,7 +73,7 @@ function MaterialContentforfinance() {
                 {/* Default box */}
                 <div className="card card-secondary">
                   <div className="card-header">
-                    <h3 className="card-title">Material Details</h3>
+                    <h3 className="card-title">Material Price Details</h3>
                     <div className="card-tools">
                       <button
                         type="button"

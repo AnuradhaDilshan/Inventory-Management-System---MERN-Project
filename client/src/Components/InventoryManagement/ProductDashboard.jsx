@@ -43,7 +43,6 @@ function ProductDashboard() {
       const data = await axios.get(apiUrl);
       const products = data.data;
       setProductlist(products);
-      console.log(products);
       const totalQuantity = data.data.reduce(
         (acc, product) => acc + product.quantity,
         0
